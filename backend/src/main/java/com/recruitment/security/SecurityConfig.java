@@ -43,6 +43,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/auth/**",
                                 "/public/**",
+                                "/files/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
@@ -92,4 +93,3 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
-

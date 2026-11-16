@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - include:
+      file: db.changelog/changeset/01-create-tables.yaml
+  - include:
+      file: db.changelog/changeset/02-create-indexes.yaml
+  - include:
+      file: db.changelog/changeset/03-insert-roles.yaml
+  - include:
+      file: db.changelog/changeset/04-insert-users.yaml
+  - include:
+      file: db.changelog/changeset/05-insert-departments.yaml
+  - include:
+      file: db.changelog/changeset/06-insert-jobs.yaml
+  - include:
+      file: db.changelog/changeset/07-insert-candidates.yaml
+  - include:
+      file: db.changelog/changeset/08-insert-candidate-details.yaml
+  - include:
+      file: db.changelog/changeset/09-insert-applications.yaml
+  - include:
+      file: db.changelog/changeset/10-insert-application-history.yaml
+  - include:
+      file: db.changelog/changeset/11-insert-interviews.yaml
+  - include:
+      file: db.changelog/changeset/12-insert-interview-evaluations.yaml
+  - include:
+      file: db.changelog/changeset/13-insert-saved-jobs.yaml
+  - include:
+      file: db.changelog/changeset/14-insert-notifications.yaml
+  - include:
+      file: db.changelog/changeset/15-insert-audit-logs.yaml
+

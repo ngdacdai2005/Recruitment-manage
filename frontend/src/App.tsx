@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
+import { applicationApi, interviewApi, reportApi } from './api';
 
 // Public Pages
 import { HomePage } from './pages/public/HomePage';
@@ -28,7 +29,7 @@ import { mockApplications, mockInterviews, mockDashboardStats, mockJobs } from '
 import { Job, Application, Interview, ApplicationStatus, InterviewEvaluation } from './types';
 
 const MainApp: React.FC = () => {
-  const { activePortal, setActivePortal, currentUser } = useAuth();
+  const { activePortal, setActivePortal, currentUser, isBackendOnline } = useAuth();
   
   // Navigation tab state
   const [currentTab, setCurrentTab] = useState<string>('home');
@@ -42,6 +43,27 @@ const MainApp: React.FC = () => {
   // Apply Modal state
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const [jobToApply, setJobToApply] = useState<Job>(mockJobs[0]);
+
+  // Sync with real backend when online
+  useEffect(() => {
+    if (isBackendOnline) {
+      applicationApi.getAdminApplications({ size: 100 })
+        .then(res => {
+          if (res && res.content && res.content.length > 0) {
+            setApplications(res.content);
+          }
+        })
+        .catch(err => console.warn('Could not fetch real applications:', err));
+
+      interviewApi.getAdminInterviews()
+        .then(res => {
+          if (res && res.length > 0) {
+            setInterviews(res);
+          }
+        })
+        .catch(err => console.warn('Could not fetch real interviews:', err));
+    }
+  }, [isBackendOnline]);
 
   // Dynamic Dashboard Stats calculation
   const stats = {
@@ -79,7 +101,18 @@ const MainApp: React.FC = () => {
     setCurrentTab('candidate-tracking');
   };
 
-  const handleUpdateAppStatus = (appId: number, toStatus: ApplicationStatus, reason?: string) => {
+  const handleUpdateAppStatus = async (appId: number, toStatus: ApplicationStatus, reason?: string) => {
+    if (isBackendOnline) {
+      try {
+        await applicationApi.updateStatus(appId, {
+          toStatus,
+          rejectionReason: reason,
+        });
+      } catch (e) {
+        console.warn('Real API status update failed:', e);
+      }
+    }
+
     setApplications(prev => prev.map(a => {
       if (a.id === appId) {
         return {
@@ -93,11 +126,43 @@ const MainApp: React.FC = () => {
     }));
   };
 
-  const handleAddInterview = (newInv: Interview) => {
+  const handleAddInterview = async (newInv: Interview) => {
+    if (isBackendOnline) {
+      try {
+        const saved = await interviewApi.scheduleInterview({
+          applicationId: newInv.applicationId,
+          interviewerId: 4,
+          scheduledAt: newInv.scheduledAt,
+          durationMinutes: newInv.durationMinutes,
+          interviewType: newInv.interviewType,
+          locationOrLink: newInv.locationOrLink,
+          notes: newInv.notes,
+        });
+        setInterviews([saved, ...interviews]);
+        return;
+      } catch (e) {
+        console.warn('Real API interview schedule failed:', e);
+      }
+    }
     setInterviews([newInv, ...interviews]);
   };
 
-  const handleSaveEvaluation = (interviewId: number, evaluation: InterviewEvaluation) => {
+  const handleSaveEvaluation = async (interviewId: number, evaluation: InterviewEvaluation) => {
+    if (isBackendOnline) {
+      try {
+        await interviewApi.evaluateInterview(interviewId, {
+          technicalScore: evaluation.technicalScore,
+          communicationScore: evaluation.communicationScore,
+          problemSolvingScore: evaluation.problemSolvingScore,
+          teamworkScore: evaluation.teamworkScore,
+          generalNotes: evaluation.generalNotes,
+          result: evaluation.result,
+        });
+      } catch (e) {
+        console.warn('Real API save evaluation failed:', e);
+      }
+    }
+
     setInterviews(prev => prev.map(inv => {
       if (inv.id === interviewId) {
         return {

@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 09-insert-applications-data
+      author: recruitment-team
+      changes:
+        - sql:
+            splitStatements: true
+            endDelimiter: ";"
+            sql: |
+              INSERT INTO applications (id, candidate_id, job_id, resume_url, resume_filename, cover_letter, expected_salary, available_date, current_status, rejection_reason) VALUES
+              (1, 1, 1, 'https://storage.recruitment.com/cvs/CV_DoVanUngVien_Backend.pdf', 'CV_DoVanUngVien_Backend.pdf', 'Tôi rất mong muốn được cống hiến cho công ty tại vị trí Senior Java Developer.', 35000000, '2026-12-01', 'INTERVIEW', NULL),
+              (2, 2, 2, 'https://storage.recruitment.com/cvs/CV_HoangThiThuyLinh_Frontend.pdf', 'CV_HoangThiThuyLinh_Frontend.pdf', 'Tôi có thế mạnh về trải nghiệm người dùng và mong muốn đồng hành lâu dài cùng quý công ty.', 25000000, '2026-12-15', 'OFFER', NULL),
+              (3, 3, 4, 'https://storage.recruitment.com/cvs/CV_VuMinhTuan_DevOps.pdf', 'CV_VuMinhTuan_DevOps.pdf', 'Kinh nghiệm vận hành Cloud AWS và cụm Kubernetes của tôi sẽ đóng góp lớn cho hạ tầng công ty.', 38000000, '2026-11-20', 'HIRED', NULL),
+              (4, 4, 6, 'https://storage.recruitment.com/cvs/CV_NgoBichPhuong_QA.pdf', 'CV_NgoBichPhuong_QA.pdf', 'Tôi tự tin vào khả năng viết test tự động và đảm bảo chất lượng hệ thống không lỗi.', 20000000, '2026-12-01', 'SCREENING', NULL),
+              (5, 5, 7, 'https://storage.recruitment.com/cvs/CV_NguyenHaiDang_AI.pdf', 'CV_NguyenHaiDang_AI.pdf', 'Tôi đam mê nghiên cứu ứng dụng AI và mong muốn xây dựng giải pháp parsing CV thông minh.', 45000000, '2027-01-01', 'INTERVIEW', NULL),
+              (6, 6, 5, 'https://storage.recruitment.com/cvs/CV_LeMaiAnh_PO.pdf', 'CV_LeMaiAnh_PO.pdf', 'Kinh nghiệm Product Owner và tư duy dữ liệu sẽ giúp sản phẩm phát triển vượt trội.', 32000000, '2026-12-05', 'SCREENING', NULL),
+              (7, 7, 9, 'https://storage.recruitment.com/cvs/CV_TranQuocBao_Sales.pdf', 'CV_TranQuocBao_Sales.pdf', 'Mạng lưới khách hàng doanh nghiệp B2B rộng mở giúp tôi mang lại doanh số ngay tháng đầu.', 25000000, '2026-12-10', 'APPLIED', NULL),
+              (8, 8, 8, 'https://storage.recruitment.com/cvs/CV_PhamThiThuTrang_HR.pdf', 'CV_PhamThiThuTrang_HR.pdf', 'Tôi mong muốn áp dụng quy trình tuyển dụng chuẩn quốc tế để thu hút nhân tài cho công ty.', 16000000, '2026-12-01', 'APPLIED', NULL),
+              (9, 9, 10, 'https://storage.recruitment.com/cvs/CV_DangHoangNam_UIUX.pdf', 'CV_DangHoangNam_UIUX.pdf', 'Thiết kế giao diện đẹp, thân thiện và nhất quán là tôn chỉ làm việc của tôi.', 28000000, '2026-12-15', 'OFFER', NULL),
+              (10, 10, 1, 'https://storage.recruitment.com/cvs/CV_PhanVanThanh_Fullstack.pdf', 'CV_PhanVanThanh_Fullstack.pdf', 'Nộp hồ sơ vị trí Java Backend nhưng kinh nghiệm chính là NodeJS/React.', 25000000, '2026-11-15', 'REJECTED', 'Kinh nghiệm chuyên sâu về Java Core và Spring Boot chưa đạt mức Senior theo yêu cầu của dự án. Hệ thống đã lưu vào Talent Pool cho các cơ hội tiếp theo.')
+              ON CONFLICT (id) DO NOTHING;
+

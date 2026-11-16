@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 03-insert-roles-data
+      author: recruitment-team
+      changes:
+        - sql:
+            splitStatements: true
+            endDelimiter: ";"
+            sql: |
+              INSERT INTO roles (id, name, description) VALUES
+              (1, 'ROLE_SUPER_ADMIN', 'Quản trị viên tối cao hệ thống toàn quyền cấu hình và phân quyền'),
+              (2, 'ROLE_HR_MANAGER', 'Trưởng phòng nhân sự, phụ trách phê duyệt tin tuyển dụng và quyết định Offer'),
+              (3, 'ROLE_RECRUITER', 'Chuyên viên tuyển dụng, sàng lọc hồ sơ, liên hệ ứng viên và điều phối phỏng vấn'),
+              (4, 'ROLE_INTERVIEWER', 'Người phỏng vấn chuyên môn (Tech Lead/Hiring Manager), thực hiện đánh giá năng lực'),
+              (5, 'ROLE_CANDIDATE', 'Ứng viên tìm kiếm việc làm, nộp CV và theo dõi tiến trình xét duyệt'),
+              (6, 'ROLE_DEPARTMENT_HEAD', 'Trưởng bộ phận chuyên môn, đề xuất nhu cầu nhân sự và phê duyệt JD'),
+              (7, 'ROLE_TALENT_SOURCER', 'Chuyên viên tìm nguồn ứng viên tiềm năng và xây dựng mạng lưới nhân tài'),
+              (8, 'ROLE_HR_ASSISTANT', 'Trợ lý nhân sự, hỗ trợ hậu cần và liên hệ nhắc lịch phỏng vấn'),
+              (9, 'ROLE_SYSTEM_AUDITOR', 'Chuyên viên kiểm toán nội bộ, giám sát nhật ký hành vi người dùng'),
+              (10, 'ROLE_GUEST', 'Tài khoản khách mời trải nghiệm hệ thống tuyển dụng')
+              ON CONFLICT (id) DO NOTHING;
+

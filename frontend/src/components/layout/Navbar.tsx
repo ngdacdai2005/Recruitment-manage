@@ -22,7 +22,7 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => {
-  const { currentUser, currentRole, activePortal, setActivePortal, loginAs, logout } = useAuth();
+  const { currentUser, currentRole, activePortal, setActivePortal, loginAs, logout, isBackendOnline, checkConnection } = useAuth();
   const [showRoleMenu, setShowRoleMenu] = useState(false);
 
   const rolesList: { role: UserRole; label: string; desc: string }[] = [
@@ -78,8 +78,24 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
           </div>
         </div>
 
-        {/* Demo Fast Role Switcher */}
-        <div className="relative">
+        {/* Demo Fast Role Switcher & Backend Indicator */}
+        <div className="flex items-center gap-3">
+          {/* Connection Status Badge */}
+          <button
+            onClick={() => checkConnection()}
+            title="Nhấn để kiểm tra lại kết nối Spring Boot Backend"
+            className="hidden lg:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono transition-colors border"
+            style={{
+              backgroundColor: isBackendOnline ? 'rgba(6, 78, 59, 0.4)' : 'rgba(120, 53, 15, 0.4)',
+              color: isBackendOnline ? '#34d399' : '#fcd34d',
+              borderColor: isBackendOnline ? '#059669' : '#d97706'
+            }}
+          >
+            <span className={`w-1.5 h-1.5 rounded-full ${isBackendOnline ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`}></span>
+            <span>{isBackendOnline ? 'Backend: Connected' : 'Demo Mode (Offline)'}</span>
+          </button>
+
+          <div className="relative">
           <div className="flex items-center gap-2">
             <span className="text-slate-400 hidden sm:inline">Thử nghiệm vai trò:</span>
             <button
@@ -124,6 +140,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
           )}
         </div>
       </div>
+    </div>
 
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">

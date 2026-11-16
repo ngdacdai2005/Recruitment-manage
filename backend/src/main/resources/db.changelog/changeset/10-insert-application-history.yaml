@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 10-insert-application-history-data
+      author: recruitment-team
+      changes:
+        - sql:
+            splitStatements: true
+            endDelimiter: ";"
+            sql: |
+              INSERT INTO application_history (id, application_id, from_status, to_status, note, rejection_reason, changed_by) VALUES
+              (1, 1, NULL, 'APPLIED', 'Ứng viên gửi hồ sơ trực tuyến qua cổng Career Portal', NULL, 5),
+              (2, 1, 'APPLIED', 'SCREENING', 'Chuyên viên Lê Tuyển Dụng duyệt hồ sơ đạt sơ loại kỹ năng', NULL, 3),
+              (3, 1, 'SCREENING', 'INTERVIEW', 'Chuyển sang vòng phỏng vấn chuyên môn kỹ thuật với Tech Lead', NULL, 2),
+              (4, 2, NULL, 'APPLIED', 'Ứng viên nộp hồ sơ Frontend React', NULL, 6),
+              (5, 2, 'APPLIED', 'SCREENING', 'Sàng lọc hồ sơ đạt chuẩn, portfolio Figma và code mẫu tốt', NULL, 3),
+              (6, 2, 'SCREENING', 'INTERVIEW', 'Phỏng vấn kỹ thuật thành công, ứng viên trả lời lưu loát', NULL, 4),
+              (7, 2, 'INTERVIEW', 'OFFER', 'Trưởng phòng nhân sự gửi thư đề nghị nhận việc (Offer Letter)', NULL, 2),
+              (8, 3, 'OFFER', 'HIRED', 'Ứng viên đã ký tiếp nhận Offer, bắt đầu gia nhập công ty', NULL, 2),
+              (9, 4, NULL, 'APPLIED', 'Ứng viên nộp hồ sơ Automation QA', NULL, 8),
+              (10, 4, 'APPLIED', 'SCREENING', 'Đang thẩm định bài test kỹ thuật tự động', NULL, 3),
+              (11, 10, 'SCREENING', 'REJECTED', 'Hồ sơ chưa đạt yêu cầu chuyên môn Java Core', 'Kinh nghiệm chuyên sâu về Java Core và Spring Boot chưa đạt mức Senior theo yêu cầu của dự án. Hệ thống đã lưu vào Talent Pool cho các cơ hội tiếp theo.', 2)
+              ON CONFLICT (id) DO NOTHING;
+

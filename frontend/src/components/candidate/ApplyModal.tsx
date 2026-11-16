@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { Job, Application } from '../../types';
 import { useAuth } from '../../context/AuthContext';
+import { fileApi, applicationApi } from '../../api';
 
 interface ApplyModalProps {
   job: Job;
@@ -27,7 +28,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
   onSubmitSuccess,
   existingApplications
 }) => {
-  const { currentUser, loginAs } = useAuth();
+  const { currentUser, loginAs, isBackendOnline } = useAuth();
 
   const [fullName, setFullName] = useState(currentUser?.fullName || 'Đỗ Văn Ứng Viên');
   const [email, setEmail] = useState(currentUser?.email || 'candidate@example.com');
@@ -61,7 +62,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (hasAlreadyApplied) {
@@ -69,7 +70,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
       return;
     }
 
-    if (!fileName) {
+    if (!fileName && !cvFile) {
       setErrorMsg('Vui lòng tải lên file CV (PDF hoặc DOCX).');
       return;
     }
@@ -77,7 +78,45 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
     setIsSubmitting(true);
     setErrorMsg(null);
 
-    // Simulate backend API call with duplicate validation and persistence
+    let uploadedUrl = 'https://storage.recruitment.com/cvs/' + (fileName || 'cv.pdf');
+    let uploadedFilename = fileName || 'cv.pdf';
+
+    // Attempt real backend upload and application submission if backend is online
+    if (isBackendOnline) {
+      try {
+        if (cvFile) {
+          const uploadRes = await fileApi.uploadCv(cvFile);
+          uploadedUrl = uploadRes.fileUrl;
+          uploadedFilename = uploadRes.fileName;
+        }
+
+        const backendApp = await applicationApi.applyJob({
+          jobId: job.id,
+          fullName,
+          email,
+          phone,
+          expectedSalary: expectedSalary ? Number(expectedSalary) : undefined,
+          availableDate,
+          resumeUrl: uploadedUrl,
+          resumeFilename: uploadedFilename,
+          coverLetter,
+        });
+
+        setIsSubmitting(false);
+        setSuccess(true);
+        onSubmitSuccess(backendApp);
+        return;
+      } catch (err: any) {
+        console.warn('Real API apply error:', err);
+        if (err.status === 400 || err.status === 409 || err.status === 404) {
+          setIsSubmitting(false);
+          setErrorMsg(err.message || 'Có lỗi xảy ra khi nộp hồ sơ.');
+          return;
+        }
+      }
+    }
+
+    // Fallback simulation when offline
     setTimeout(() => {
       setIsSubmitting(false);
       setSuccess(true);
@@ -97,8 +136,8 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
           department: { name: job.department.name, code: job.department.code },
           location: job.location
         },
-        resumeUrl: 'https://storage.recruitment.com/cvs/' + fileName,
-        resumeFilename: fileName,
+        resumeUrl: uploadedUrl,
+        resumeFilename: uploadedFilename,
         coverLetter,
         expectedSalary: Number(expectedSalary),
         availableDate,
@@ -108,7 +147,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
       };
 
       onSubmitSuccess(newApp);
-    }, 1000);
+    }, 600);
   };
 
   return (

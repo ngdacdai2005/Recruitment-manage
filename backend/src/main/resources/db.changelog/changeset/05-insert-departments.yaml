@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 05-insert-departments-data
+      author: recruitment-team
+      changes:
+        - sql:
+            splitStatements: true
+            endDelimiter: ";"
+            sql: |
+              INSERT INTO departments (id, name, code, description, manager_id, is_active) VALUES
+              (1, 'Công nghệ thông tin', 'IT', 'Nghiên cứu, phát triển hệ thống phần mềm lõi và hạ tầng kỹ thuật Cloud', 10, TRUE),
+              (2, 'Tiếp thị & Truyền thông', 'MKT', 'Xây dựng thương hiệu nhà tuyển dụng, Marketing đa kênh và thu hút người dùng', 2, TRUE),
+              (3, 'Kinh doanh & Phát triển', 'SALES', 'Mở rộng thị phần B2B, quan hệ đối tác chiến lược và chăm sóc khách hàng doanh nghiệp', 2, TRUE),
+              (4, 'Nhân sự & Hành chính', 'HR', 'Hoạch định nhân tài, tuyển dụng, đào tạo hội nhập và phát triển văn hóa công ty', 2, TRUE),
+              (5, 'Tài chính - Kế toán', 'FIN', 'Quản lý dòng tiền, kế toán tài chính, ngân sách dự án và báo cáo kiểm toán', 1, TRUE),
+              (6, 'Quản lý Sản phẩm & Design', 'PRODUCT', 'Nghiên cứu hành vi người dùng, thiết kế trải nghiệm UI/UX và lộ trình tính năng', 10, TRUE),
+              (7, 'Dịch vụ & Chăm sóc Khách hàng', 'CS', 'Hỗ trợ khách hàng đa kênh 24/7, đo lường sự hài lòng và giải quyết khiếu nại', 2, TRUE),
+              (8, 'Kiểm thử & Đảm bảo Chất lượng', 'QA', 'Kiểm thử phần mềm tự động hóa (Automation Testing) và đảm bảo an toàn bảo mật', 4, TRUE),
+              (9, 'Nghiên cứu & Đổi mới AI', 'RND', 'Phát triển các mô hình AI/ML ứng dụng trong matching CV và tự động hóa', 4, TRUE),
+              (10, 'Pháp chế & Tuân thủ', 'LEGAL', 'Tư vấn pháp lý hợp đồng lao động, tuân thủ quy định lao động và sở hữu trí tuệ', 1, TRUE)
+              ON CONFLICT (id) DO NOTHING;
+

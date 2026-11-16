@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Briefcase, 
   Plus, 
@@ -17,13 +17,35 @@ import {
 import { Job, JobStatus, Department } from '../../types';
 import { mockJobs, mockDepartments } from '../../data/mockData';
 import { useAuth } from '../../context/AuthContext';
+import { jobApi, departmentApi } from '../../api';
 
 export const AdminJobsPage: React.FC = () => {
-  const { currentRole } = useAuth();
+  const { currentRole, isBackendOnline } = useAuth();
   const [jobs, setJobs] = useState<Job[]>(mockJobs);
+  const [departments, setDepartments] = useState<Department[]>(mockDepartments);
   const [keyword, setKeyword] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [deptFilter, setDeptFilter] = useState<string>('ALL');
+
+  useEffect(() => {
+    if (isBackendOnline) {
+      jobApi.getAdminJobs()
+        .then(res => {
+          if (res && res.content && res.content.length > 0) {
+            setJobs(res.content);
+          }
+        })
+        .catch(err => console.warn('Could not fetch admin jobs:', err));
+
+      departmentApi.getDepartments()
+        .then(res => {
+          if (res && res.length > 0) {
+            setDepartments(res);
+          }
+        })
+        .catch(err => console.warn('Could not fetch departments:', err));
+    }
+  }, [isBackendOnline]);
   
   // Create Job Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -47,13 +69,49 @@ export const AdminJobsPage: React.FC = () => {
     return true;
   });
 
-  const handleStatusChange = (jobId: number, nextStatus: JobStatus) => {
+  const handleStatusChange = async (jobId: number, nextStatus: JobStatus) => {
+    if (isBackendOnline) {
+      try {
+        await jobApi.updateJobStatus(jobId, nextStatus);
+      } catch (e) {
+        console.warn('Real API job status update failed:', e);
+      }
+    }
     setJobs(jobs.map(j => j.id === jobId ? { ...j, status: nextStatus } : j));
   };
 
-  const handleCreateJob = (e: React.FormEvent) => {
+  const handleCreateJob = async (e: React.FormEvent) => {
     e.preventDefault();
-    const dept = mockDepartments.find(d => d.id === newDeptId) || mockDepartments[0];
+    const dept = departments.find(d => d.id === newDeptId) || departments[0];
+
+    const jobData: Partial<Job> = {
+      title: newTitle,
+      slug: newTitle.toLowerCase().replace(/\s+/g, '-'),
+      department: dept,
+      jobLevel: newLevel,
+      employmentType: newType,
+      location: newLocation,
+      salaryMin: Number(newSalaryMin),
+      salaryMax: Number(newSalaryMax),
+      quantity: newQuantity,
+      deadline: newDeadline,
+      description: newDesc,
+      requirements: newReq,
+      benefits: newBen,
+      status: currentRole === 'ROLE_RECRUITER' ? 'PENDING_APPROVAL' : 'PUBLISHED',
+    };
+
+    if (isBackendOnline) {
+      try {
+        const created = await jobApi.createJob(jobData, newDeptId);
+        setJobs([created, ...jobs]);
+        setIsModalOpen(false);
+        setNewTitle('');
+        return;
+      } catch (err) {
+        console.warn('Real API createJob failed, using local fallback:', err);
+      }
+    }
 
     const newJob: Job = {
       id: Date.now(),
@@ -76,7 +134,6 @@ export const AdminJobsPage: React.FC = () => {
 
     setJobs([newJob, ...jobs]);
     setIsModalOpen(false);
-    // Reset form
     setNewTitle('');
   };
 

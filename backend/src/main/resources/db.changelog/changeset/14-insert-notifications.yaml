@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 14-insert-notifications-data
+      author: recruitment-team
+      changes:
+        - sql:
+            splitStatements: true
+            endDelimiter: ";"
+            sql: |
+              INSERT INTO notifications (id, user_id, title, content, type, is_read, link_url) VALUES
+              (1, 5, 'Hồ sơ đã được tiếp nhận', 'Bạn đã ứng tuyển thành công vị trí Senior Java Backend Engineer. Phòng Nhân sự sẽ phản hồi trong 3 ngày làm việc.', 'APPLICATION', TRUE, '/candidate/applications/1/tracking'),
+              (2, 5, 'Lời mời phỏng vấn kỹ thuật', 'Chúc mừng bạn! Nhà tuyển dụng đã lên lịch phỏng vấn chuyên môn vào ngày 20/11 lúc 14:00.', 'INTERVIEW', FALSE, '/candidate/interviews'),
+              (3, 6, 'Thư mời nhận việc (Offer Letter)', 'Bộ phận nhân sự đã gửi thư mời nhận việc cho vị trí Frontend Developer. Vui lòng xem chi tiết.', 'APPLICATION', FALSE, '/candidate/applications/2/tracking'),
+              (4, 7, 'Chào mừng thành viên mới!', 'Chúc mừng bạn đã chính thức hoàn tất quy trình tuyển dụng và trở thành Cloud DevOps Engineer của công ty.', 'SYSTEM', TRUE, '/candidate/dashboard'),
+              (5, 8, 'Hồ sơ đang được sàng lọc', 'Hồ sơ ứng tuyển vị trí Automation QA của bạn đang được Chuyên viên tuyển dụng xem xét.', 'APPLICATION', TRUE, '/candidate/applications/4/tracking'),
+              (6, 11, 'Lời mời phỏng vấn AI/NLP', 'Lịch phỏng vấn chuyên sâu cho vị trí AI Engineer đã được xác nhận vào lúc 09:30 ngày 22/11.', 'INTERVIEW', FALSE, '/candidate/interviews'),
+              (7, 16, 'Thông báo kết quả xét duyệt hồ sơ', 'Cảm ơn bạn đã quan tâm ứng tuyển. Bộ phận tuyển dụng đã gửi thư phản hồi chi tiết tới email của bạn.', 'APPLICATION', TRUE, '/candidate/applications/10/tracking'),
+              (8, 2, 'Ứng viên mới nộp hồ sơ', 'Hệ thống vừa ghi nhận hồ sơ ứng tuyển mới từ ứng viên Đặng Hoàng Nam cho vị trí UI/UX Designer.', 'APPLICATION', FALSE, '/admin/pipeline'),
+              (9, 4, 'Nhắc lịch phỏng vấn sắp tới', 'Bạn có 1 buổi phỏng vấn kỹ thuật với ứng viên Đỗ Văn Ứng Viên vào ngày 20/11 lúc 14:00.', 'INTERVIEW', FALSE, '/admin/interviews'),
+              (10, 1, 'Báo cáo tuyển dụng tuần', 'Báo cáo KPI tuyển dụng và phễu chuyển đổi tuần 46 đã được tổng hợp thành công.', 'SYSTEM', TRUE, '/admin/dashboard')
+              ON CONFLICT (id) DO NOTHING;
+

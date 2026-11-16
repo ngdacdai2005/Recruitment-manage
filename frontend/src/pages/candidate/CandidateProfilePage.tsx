@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   UserCheck, 
   FileText, 
@@ -12,9 +12,10 @@ import {
   Sparkles 
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { candidateApi, fileApi } from '../../api';
 
 export const CandidateProfilePage: React.FC = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, isBackendOnline } = useAuth();
 
   const [fullName, setFullName] = useState(currentUser?.fullName || 'Đỗ Văn Ứng Viên');
   const [email, setEmail] = useState(currentUser?.email || 'candidate@example.com');
@@ -31,6 +32,47 @@ export const CandidateProfilePage: React.FC = () => {
   ]);
   const [newSkill, setNewSkill] = useState('');
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+
+  useEffect(() => {
+    if (isBackendOnline) {
+      candidateApi.getMyProfile()
+        .then(profile => {
+          if (profile) {
+            setFullName(profile.fullName || fullName);
+            setEmail(profile.email || email);
+            setPhone(profile.phone || phone);
+            setAddress(profile.address || address);
+            setHeadline(profile.headline || headline);
+            setSummary(profile.summary || summary);
+            if (profile.currentCvUrl) {
+              setCvName(profile.currentCvUrl.split('/').pop() || cvName);
+            }
+          }
+        })
+        .catch(err => console.warn('Could not fetch candidate profile:', err));
+    }
+  }, [isBackendOnline]);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setCvName(file.name);
+      if (isBackendOnline) {
+        setIsUploading(true);
+        try {
+          const res = await fileApi.uploadCv(file);
+          await candidateApi.updateCvUrl(res.fileUrl);
+          setSavedSuccess(true);
+          setTimeout(() => setSavedSuccess(false), 3000);
+        } catch (err) {
+          console.warn('Upload CV API failed:', err);
+        } finally {
+          setIsUploading(false);
+        }
+      }
+    }
+  };
 
   const handleAddSkill = (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,8 +86,21 @@ export const CandidateProfilePage: React.FC = () => {
     setSkills(skills.filter(s => s !== skillToRemove));
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isBackendOnline) {
+      try {
+        await candidateApi.updateProfile({
+          fullName,
+          phone,
+          address,
+          headline,
+          summary,
+        });
+      } catch (err) {
+        console.warn('Update candidate profile API failed:', err);
+      }
+    }
     setSavedSuccess(true);
     setTimeout(() => setSavedSuccess(false), 3000);
   };
@@ -104,17 +159,12 @@ export const CandidateProfilePage: React.FC = () => {
 
               <label className="px-3 py-1.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg cursor-pointer transition-colors flex items-center gap-1.5">
                 <UploadCloud className="w-3.5 h-3.5" />
-                <span>Thay CV mới</span>
+                <span>{isUploading ? 'Đang tải lên...' : 'Thay CV mới'}</span>
                 <input
                   type="file"
                   accept=".pdf,.doc,.docx"
-                  onChange={(e) => {
-                    if (e.target.files && e.target.files[0]) {
-                      setCvName(e.target.files[0].name);
-                      setSavedSuccess(true);
-                      setTimeout(() => setSavedSuccess(false), 3000);
-                    }
-                  }}
+                  onChange={handleFileUpload}
+                  disabled={isUploading}
                   className="hidden"
                 />
               </label>

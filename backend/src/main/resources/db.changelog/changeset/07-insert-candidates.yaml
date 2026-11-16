@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 07-insert-candidates-data
+      author: recruitment-team
+      changes:
+        - sql:
+            splitStatements: true
+            endDelimiter: ";"
+            sql: |
+              INSERT INTO candidates (id, user_id, full_name, email, phone, address, date_of_birth, headline, summary, current_cv_url) VALUES
+              (1, 5, 'Đỗ Văn Ứng Viên', 'candidate@example.com', '0945678901', 'Cầu Giấy, Hà Nội', '1998-05-15', 'Senior Java Backend Engineer | Spring Boot & Cloud', 'Hơn 4 năm kinh nghiệm phát triển hệ thống tài chính phân tán, thành thạo Spring Boot, Kafka, Redis, Docker.', 'https://storage.recruitment.com/cvs/CV_DoVanUngVien_Backend.pdf'),
+              (2, 6, 'Hoàng Thị Thùy Linh', 'candidate2@example.com', '0956789012', 'Thanh Xuân, Hà Nội', '1999-08-20', 'Frontend Engineer | React, TypeScript & Next.js', 'Chuyên sâu xây dựng UI/UX hiện đại, tối ưu Core Web Vitals và thiết lập State Management tinh gọn.', 'https://storage.recruitment.com/cvs/CV_HoangThiThuyLinh_Frontend.pdf'),
+              (3, 7, 'Vũ Minh Tuấn', 'candidate3@example.com', '0967890123', 'Hai Bà Trưng, Hà Nội', '1996-11-10', 'DevOps & Site Reliability Engineer | AWS & K8s', '3 năm quản trị hạ tầng điện toán đám mây AWS, triển khai cụm Kubernetes tự động mở rộng và CI/CD GitOps.', 'https://storage.recruitment.com/cvs/CV_VuMinhTuan_DevOps.pdf'),
+              (4, 8, 'Ngô Bích Phương', 'candidate4@example.com', '0978901234', 'Đống Đa, Hà Nội', '2000-02-28', 'Automation QA Engineer | Selenium & Cypress', 'Kinh nghiệm xây dựng framework kiểm thử tự động cho hệ thống thương mại điện tử và kiểm thử hiệu năng API.', 'https://storage.recruitment.com/cvs/CV_NgoBichPhuong_QA.pdf'),
+              (5, 11, 'Nguyễn Hải Đăng', 'haidang.ai@gmail.com', '0911223344', 'Nam Từ Liêm, Hà Nội', '1997-04-12', 'AI/ML Engineer | NLP & LLM Applications', 'Nghiên cứu áp dụng Machine Learning trong xử lý ngôn ngữ tự nhiên, phân loại văn bản và trích xuất dữ liệu.', 'https://storage.recruitment.com/cvs/CV_NguyenHaiDang_AI.pdf'),
+              (6, 12, 'Lê Mai Anh', 'maianh.po@gmail.com', '0922334455', 'Ba Đình, Hà Nội', '1995-09-05', 'Product Owner & Senior Business Analyst', 'Quản lý lộ trình sản phẩm SaaS, phân tích hành vi khách hàng và tối ưu luồng nghiệp vụ tuyển dụng.', 'https://storage.recruitment.com/cvs/CV_LeMaiAnh_PO.pdf'),
+              (7, 13, 'Trần Quốc Bảo', 'quocbao.sales@gmail.com', '0933445566', 'Quận 1, TP. Hồ Chí Minh', '1996-07-22', 'B2B Enterprise Account Executive', 'Thành tích vượt 140% KPI doanh số bán phần mềm B2B cho khối tài chính ngân hàng và bảo hiểm.', 'https://storage.recruitment.com/cvs/CV_TranQuocBao_Sales.pdf'),
+              (8, 14, 'Phạm Thị Thu Trang', 'thutrang.hr@gmail.com', '0944556677', 'Hoàng Mai, Hà Nội', '1999-12-18', 'Talent Acquisition & Employer Branding', 'Kinh nghiệm tuyển dụng khối kỹ thuật công nghệ cao, tổ chức sự kiện Job Fair tại các trường đại học lớn.', 'https://storage.recruitment.com/cvs/CV_PhamThiThuTrang_HR.pdf'),
+              (9, 15, 'Đặng Hoàng Nam', 'hoangnam.design@gmail.com', '0955667788', 'Tây Hồ, Hà Nội', '1998-03-30', 'Senior UI/UX Designer & Design System Lead', 'Thiết kế trải nghiệm người dùng tinh tế, xây dựng thư viện Figma UI Kit chuẩn thiết kế quốc tế.', 'https://storage.recruitment.com/cvs/CV_DangHoangNam_UIUX.pdf'),
+              (10, 16, 'Phan Văn Thành', 'vanthanh.fullstack@gmail.com', '0966778899', 'Hà Đông, Hà Nội', '1997-10-25', 'Fullstack Engineer | Spring Boot & React', 'Lập trình viên fullstack giàu kinh nghiệm triển khai dự án từ khâu thiết kế DB đến đóng gói frontend.', 'https://storage.recruitment.com/cvs/CV_PhanVanThanh_Fullstack.pdf')
+              ON CONFLICT (id) DO NOTHING;
+

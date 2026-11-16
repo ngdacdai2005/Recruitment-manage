@@ -1,0 +1,53 @@
+databaseChangeLog:
+  - changeSet:
+      id: 08-insert-candidate-sub-details
+      author: recruitment-team
+      changes:
+        - sql:
+            splitStatements: true
+            endDelimiter: ";"
+            sql: |
+              -- 1. Candidate Skills (10+ skills)
+              INSERT INTO candidate_skills (id, candidate_id, skill_name, proficiency_level) VALUES
+              (1, 1, 'Java & Spring Boot', 'Expert'),
+              (2, 1, 'PostgreSQL & Redis', 'Advanced'),
+              (3, 1, 'Apache Kafka & Microservices', 'Advanced'),
+              (4, 2, 'React.js & TypeScript', 'Expert'),
+              (5, 2, 'Tailwind CSS & Next.js', 'Advanced'),
+              (6, 3, 'AWS (EKS, EC2, S3, RDS)', 'Advanced'),
+              (7, 3, 'Kubernetes & Docker', 'Expert'),
+              (8, 4, 'Selenium & Automation Testing', 'Advanced'),
+              (9, 5, 'Python & PyTorch', 'Expert'),
+              (10, 6, 'Product Backlog Management & Agile', 'Expert'),
+              (11, 7, 'B2B Sales & Key Account Management', 'Expert'),
+              (12, 9, 'Figma & Design Systems', 'Expert')
+              ON CONFLICT (id) DO NOTHING;
+
+              -- 2. Candidate Experiences (10+ experiences)
+              INSERT INTO candidate_experiences (id, candidate_id, company_name, position, start_date, end_date, is_current, description) VALUES
+              (1, 1, 'FPT Software', 'Senior Java Developer', '2023-01-15', NULL, TRUE, 'Xây dựng dịch vụ thanh toán trực tuyến xử lý 10.000 TPS bằng Spring Cloud và Kafka.'),
+              (2, 1, 'VNG Corporation', 'Java Backend Developer', '2021-03-01', '2022-12-31', FALSE, 'Phát triển backend cho cổng game trực tuyến với Redis và PostgreSQL.'),
+              (3, 2, 'One Mount Group', 'Middle Frontend Engineer', '2022-06-01', NULL, TRUE, 'Xây dựng ứng dụng quản trị VinShop bằng React, TypeScript và Redux Toolkit.'),
+              (4, 3, 'Viettel Telecom', 'Cloud DevOps Engineer', '2022-02-01', NULL, TRUE, 'Thiết lập hạ tầng Kubernetes trên AWS, triển khai hệ thống Prometheus và Grafana.'),
+              (5, 4, 'Tiki Corporation', 'QA Automation Engineer', '2022-08-01', NULL, TRUE, 'Viết test suite tự động kiểm tra hồi quy với Selenium WebDriver và Jenkins CI.'),
+              (6, 5, 'VinAI Research', 'AI Research Resident', '2021-09-01', '2023-09-01', FALSE, 'Nghiên cứu mô hình ngôn ngữ lớn (LLM) và ứng dụng tóm tắt văn bản tự động.'),
+              (7, 6, 'Base.vn', 'Senior Business Analyst', '2020-10-01', NULL, TRUE, 'Thiết kế các phân hệ quản lý nhân sự HRM và quy trình phê duyệt công văn trực tuyến.'),
+              (8, 7, 'MISA JSC', 'Senior B2B Sales Executive', '2021-05-01', NULL, TRUE, 'Phụ trách nhóm khách hàng khối ngân hàng và bất động sản sử dụng phần mềm quản trị.'),
+              (9, 8, 'Navigos Group', 'Tech Recruitment Consultant', '2022-04-01', NULL, TRUE, 'Headhunt các vị trí Technical Leader và Architect cho đối tác Nhật Bản và Mỹ.'),
+              (10, 9, 'Techcombank', 'Senior Product Designer', '2022-01-01', NULL, TRUE, 'Phụ trách thiết kế trải nghiệm người dùng cho ứng dụng Ngân hàng số TCB Mobile.')
+              ON CONFLICT (id) DO NOTHING;
+
+              -- 3. Candidate Educations (10+ educations)
+              INSERT INTO candidate_educations (id, candidate_id, institution, degree, field_of_study, graduation_year) VALUES
+              (1, 1, 'Đại học Bách Khoa Hà Nội', 'Kỹ sư', 'Công nghệ thông tin', 2020),
+              (2, 2, 'Đại học Quốc gia Hà Nội (UET)', 'Cử nhân', 'Khoa học máy tính', 2021),
+              (3, 3, 'Học viện Công nghệ Bưu chính Viễn thông', 'Kỹ sư', 'An toàn thông tin', 2019),
+              (4, 4, 'Đại học Giao thông Vận tải', 'Cử nhân', 'Hệ thống thông tin', 2022),
+              (5, 5, 'Đại học Bách Khoa Hà Nội', 'Thạc sĩ', 'Trí tuệ nhân tạo (AI)', 2023),
+              (6, 6, 'Đại học Kinh tế Quốc dân', 'Cử nhân', 'Hệ thống thông tin quản lý (MIS)', 2018),
+              (7, 7, 'Đại học Thương mại', 'Cử nhân', 'Quản trị kinh doanh', 2019),
+              (8, 8, 'Đại học Ngoại thương', 'Cử nhân', 'Kinh tế đối ngoại', 2021),
+              (9, 9, 'Đại học Mỹ thuật Công nghiệp', 'Cử nhân', 'Thiết kế đồ họa & Đa phương tiện', 2020),
+              (10, 10, 'Đại học Bách Khoa Hà Nội', 'Kỹ sư', 'Kỹ thuật phần mềm', 2020)
+              ON CONFLICT (id) DO NOTHING;
+

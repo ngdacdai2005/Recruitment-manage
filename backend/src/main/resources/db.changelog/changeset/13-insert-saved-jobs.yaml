@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 13-insert-saved-jobs-data
+      author: recruitment-team
+      changes:
+        - sql:
+            splitStatements: true
+            endDelimiter: ";"
+            sql: |
+              INSERT INTO saved_jobs (id, candidate_id, job_id) VALUES
+              (1, 1, 1),
+              (2, 1, 2),
+              (3, 1, 4),
+              (4, 2, 2),
+              (5, 2, 10),
+              (6, 3, 4),
+              (7, 4, 6),
+              (8, 5, 7),
+              (9, 6, 5),
+              (10, 9, 10)
+              ON CONFLICT (id) DO NOTHING;
+

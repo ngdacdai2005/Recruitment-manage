@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: 15-insert-audit-logs-data
+      author: recruitment-team
+      validCheckSum:
+        - "1:any"
+      changes:
+        - sql:
+            splitStatements: true
+            endDelimiter: ";"
+            sql: |
+              ALTER TABLE audit_logs ADD COLUMN IF NOT EXISTS details TEXT;
+
+              INSERT INTO audit_logs (id, user_id, action, entity_name, entity_id, details, ip_address) VALUES
+              (1, 1, 'USER_LOGIN', 'User', '1', 'Đăng nhập hệ thống thành công', '192.168.1.10'),
+              (2, 2, 'CREATE_JOB', 'Job', '1', 'Tạo mới tin tuyển dụng Senior Java Backend Engineer', '192.168.1.25'),
+              (3, 5, 'APPLY_JOB', 'Application', '1', 'Ứng viên Đỗ Văn Ứng Viên nộp hồ sơ vào vị trí Senior Java', '14.232.180.5'),
+              (4, 3, 'TRANSITION_STATUS', 'Application', '1', 'Chuyển trạng thái đơn ứng tuyển sang Sàng lọc CV', '192.168.1.30'),
+              (5, 2, 'TRANSITION_STATUS', 'Application', '1', 'Duyệt hồ sơ chuyển sang vòng Phỏng vấn kỹ thuật', '192.168.1.25'),
+              (6, 4, 'SCHEDULE_INTERVIEW', 'Interview', '1', 'Lên lịch phỏng vấn ngày 20/11 lúc 14:00 qua Google Meet', '192.168.1.40'),
+              (7, 4, 'SUBMIT_EVALUATION', 'InterviewEvaluation', '1', 'Chấm điểm phỏng vấn đạt kết quả PASS (Điểm TB: 8.5/10)', '192.168.1.40'),
+              (8, 2, 'TRANSITION_STATUS', 'Application', '2', 'Gửi thư mời nhận việc Offer Letter cho ứng viên Frontend', '192.168.1.25'),
+              (9, 2, 'TRANSITION_STATUS', 'Application', '3', 'Xác nhận ứng viên Cloud DevOps đã ký Offer thành công (HIRED)', '192.168.1.25'),
+              (10, 2, 'REJECT_APPLICATION', 'Application', '10', 'Từ chối hồ sơ ứng viên: Kinh nghiệm chuyên môn chưa phù hợp', '192.168.1.25')
+              ON CONFLICT (id) DO NOTHING;

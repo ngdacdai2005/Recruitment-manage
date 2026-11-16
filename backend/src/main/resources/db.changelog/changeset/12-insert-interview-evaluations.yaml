@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 12-insert-interview-evaluations-data
+      author: recruitment-team
+      changes:
+        - sql:
+            splitStatements: true
+            endDelimiter: ";"
+            sql: |
+              INSERT INTO interview_evaluations (id, interview_id, technical_score, communication_score, problem_solving_score, teamwork_score, general_notes, result, submitted_by) VALUES
+              (1, 1, 8, 8, 8, 9, 'Ứng viên nắm chắc kiến trúc Spring Boot và JPA, giải quyết tốt bài toán deadlock database.', 'PASS', 4),
+              (2, 2, 9, 8, 8, 9, 'Kỹ năng React tốt, hiểu sâu về Render cycle, tối ưu hóa memoization và Custom Hooks.', 'PASS', 4),
+              (3, 3, 9, 9, 9, 9, 'Kinh nghiệm hạ tầng AWS và K8s vượt mong đợi, xử lý tình huống failover rất tự tin.', 'PASS', 4),
+              (4, 4, 8, 7, 9, 8, 'Tư duy thuật toán và mô hình toán học vững, có tiềm năng nghiên cứu đề tài lớn.', 'PASS', 4),
+              (5, 5, 8, 9, 8, 9, 'Giao tiếp mạch lạc, kỹ năng đặt câu hỏi làm rõ Requirement rất sắc sảo.', 'PASS', 10),
+              (6, 6, 7, 9, 8, 8, 'Khả năng thuyết phục tốt, hiểu sâu tâm lý khách hàng khối ngân hàng B2B.', 'PASS', 2),
+              (7, 7, 8, 9, 8, 9, 'Năng động, phù hợp văn hóa trẻ trung đổi mới của tổ chức.', 'PASS', 2),
+              (8, 8, 9, 9, 9, 10, 'Portfolio xuất sắc, tư duy component và token hóa thiết kế rất bài bản.', 'PASS', 10),
+              (9, 9, 8, 9, 8, 9, 'Đồng thuận mức đãi ngộ bậc Middle, thái độ hợp tác tích cực.', 'PASS', 2),
+              (10, 10, 9, 9, 9, 9, 'Hoàn tất thủ tục onboard, ứng viên hào hứng với môi trường mới.', 'PASS', 2)
+              ON CONFLICT (id) DO NOTHING;
+
