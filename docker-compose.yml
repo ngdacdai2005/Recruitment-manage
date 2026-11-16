@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  # -------------------------------------------------------------
+  # PostgreSQL Database
+  # -------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: recruitment_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: recruitment_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - recruitment_network
+
+  # -------------------------------------------------------------
+  # Redis Cache & Session
+  # -------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: recruitment_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - recruitment_network
+
+  # -------------------------------------------------------------
+  # MinIO Object Storage (CV, Resumes & Attachments)
+  # -------------------------------------------------------------
+  minio:
+    image: minio/minio:latest
+    container_name: recruitment_minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadminpassword
+    ports:
+      - "9000:9000" # MinIO API
+      - "9001:9001" # MinIO Web Console
+    volumes:
+      - minio_data:/data
+    networks:
+      - recruitment_network
+
+  # -------------------------------------------------------------
+  # MailHog - Mock SMTP Server for Development Email Testing
+  # -------------------------------------------------------------
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: recruitment_mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025" # SMTP port for Spring Mail
+      - "8025:8025" # Web UI to view sent recruitment emails
+    networks:
+      - recruitment_network
+
+networks:
+  recruitment_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+
