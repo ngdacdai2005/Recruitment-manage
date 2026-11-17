@@ -23,6 +23,7 @@ import { AdminKanbanPage } from './pages/admin/AdminKanbanPage';
 import { AdminJobsPage } from './pages/admin/AdminJobsPage';
 import { AdminCandidatesPage } from './pages/admin/AdminCandidatesPage';
 import { AdminInterviewsPage } from './pages/admin/AdminInterviewsPage';
+import { AdminEmployeesPage } from './pages/admin/AdminEmployeesPage';
 
 // Data & Types
 import { mockApplications, mockInterviews, mockDashboardStats, mockJobs } from './data/mockData';
@@ -302,6 +303,10 @@ const MainApp: React.FC = () => {
                 onAddInterview={handleAddInterview}
                 onSaveEvaluation={handleSaveEvaluation}
               />
+            )}
+
+            {currentTab === 'admin-employees' && (
+              <AdminEmployeesPage />
             )}
           </>
         )}

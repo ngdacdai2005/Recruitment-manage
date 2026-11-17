@@ -12,7 +12,8 @@ import {
   Calendar, 
   FileText, 
   Building2, 
-  ExternalLink 
+  ExternalLink,
+  Users 
 } from 'lucide-react';
 import { UserRole } from '../../types';
 
@@ -271,6 +272,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
               >
                 <Calendar className="w-4 h-4" />
                 Lịch & Đánh giá
+              </button>
+              <button
+                onClick={() => setCurrentTab('admin-employees')}
+                className={`px-3.5 py-2 rounded-lg transition-colors flex items-center gap-1.5 ${currentTab === 'admin-employees' ? 'text-indigo-600 bg-indigo-50 font-semibold' : 'hover:text-slate-900 hover:bg-slate-100'}`}
+              >
+                <Users className="w-4 h-4" />
+                Quản lý nhân sự
               </button>
             </>
           )}
