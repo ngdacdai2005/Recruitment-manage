@@ -1,0 +1,12 @@
+/* Branches Feature-specific styles */
+.branches-page-container {
+  min-height: 100%;
+}
+
+.branch-card-highlight {
+  transition: all 0.2s ease-in-out;
+}
+
+.branch-card-highlight:hover {
+  transform: translateY(-2px);
+}

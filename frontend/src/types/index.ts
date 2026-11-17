@@ -1,9 +1,6 @@
-export type UserRole = 
-  | 'ROLE_SUPER_ADMIN'
-  | 'ROLE_HR_MANAGER'
-  | 'ROLE_RECRUITER'
-  | 'ROLE_INTERVIEWER'
-  | 'ROLE_CANDIDATE';
+import { UserRole, Gender, ContractType } from './common.types';
+export * from './common.types';
+export * from './api.types';
 
 export interface User {
   id: number;
@@ -167,8 +164,6 @@ export interface DashboardStats {
   conversionRate: number;
 }
 
-export type Gender = 'FEMALE' | 'MALE' | 'OTHER';
-export type ContractType = 'OFFICIAL' | 'PROBATION' | 'PART_TIME' | 'INTERN';
 
 export interface Position {
   id: number;
