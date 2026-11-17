@@ -1,0 +1,107 @@
+databaseChangeLog:
+  - changeSet:
+      id: 17-create-positions-and-employees-tables
+      author: dacdai
+      validCheckSum:
+        - "1:any"
+      changes:
+        - sql:
+            splitStatements: true
+            endDelimiter: ";"
+            sql: |
+              -- 1. Bảng Chức danh / Vị trí công việc (positions)
+              CREATE TABLE IF NOT EXISTS positions (
+                  id BIGSERIAL PRIMARY KEY,
+                  name VARCHAR(100) NOT NULL,
+                  code VARCHAR(50) UNIQUE NOT NULL,
+                  description TEXT,
+                  department_id INT REFERENCES departments(id) ON DELETE SET NULL,
+                  is_active BOOLEAN DEFAULT TRUE,
+                  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+              );
+
+              -- 2. Bảng Hồ sơ nhân viên (employees)
+              CREATE TABLE IF NOT EXISTS employees (
+                  id BIGSERIAL PRIMARY KEY,
+                  user_id BIGINT UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                  employee_code VARCHAR(20) UNIQUE NOT NULL,
+                  short_name VARCHAR(50),
+                  phone VARCHAR(20) NOT NULL,
+                  gender INT NOT NULL DEFAULT 1,
+                  dob DATE,
+                  address TEXT,
+                  avatar VARCHAR(500),
+                  profile TEXT,
+                  cccd VARCHAR(12) UNIQUE,
+                  cccd_issue_date DATE,
+                  cccd_issue_place VARCHAR(255),
+                  bank_account VARCHAR(50),
+                  bank_name VARCHAR(100),
+                  join_date DATE NOT NULL,
+                  contract_type VARCHAR(20) NOT NULL DEFAULT 'OFFICIAL',
+                  contract_start_date DATE,
+                  contract_end_date DATE,
+                  department_id INT REFERENCES departments(id) ON DELETE SET NULL,
+                  position_id BIGINT REFERENCES positions(id) ON DELETE SET NULL,
+                  status INT NOT NULL DEFAULT 1,
+                  is_delete BOOLEAN NOT NULL DEFAULT FALSE,
+                  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                  created_by BIGINT REFERENCES users(id) ON DELETE SET NULL,
+                  updated_by BIGINT REFERENCES users(id) ON DELETE SET NULL
+              );
+
+              -- 3. Tạo Indexes tối ưu tìm kiếm
+              CREATE INDEX IF NOT EXISTS idx_employees_employee_code ON employees(employee_code);
+              CREATE INDEX IF NOT EXISTS idx_employees_phone ON employees(phone);
+              CREATE INDEX IF NOT EXISTS idx_employees_department_id ON employees(department_id);
+              CREATE INDEX IF NOT EXISTS idx_employees_position_id ON employees(position_id);
+              CREATE INDEX IF NOT EXISTS idx_employees_status ON employees(status);
+              CREATE INDEX IF NOT EXISTS idx_employees_is_delete ON employees(is_delete);
+
+              -- 4. Dữ liệu mẫu 10 vị trí chức danh (positions)
+              INSERT INTO positions (id, name, code, description, department_id, is_active) VALUES
+              (1, 'Tổng Giám Đốc (CEO)', 'EXEC_CEO', 'Điều hành toàn bộ hoạt động công ty', 1, TRUE),
+              (2, 'Trưởng Phòng Nhân Sự (HR Manager)', 'HR_MGR', 'Quản lý toàn bộ hoạt động nhân sự và tuyển dụng', 2, TRUE),
+              (3, 'Chuyên Viên Tuyển Dụng Cấp Cao (Senior Recruiter)', 'HR_REC_SR', 'Tuyển dụng và tìm kiếm nhân tài', 2, TRUE),
+              (4, 'Chuyên Viên Tìm Kiếm Tài Năng (Talent Sourcer)', 'HR_SOURCER', 'Tìm kiếm và tạo nguồn ứng viên tiềm năng', 2, TRUE),
+              (5, 'Giám Đốc Công Nghệ (CTO)', 'TECH_CTO', 'Định hướng kiến trúc công nghệ toàn diện', 3, TRUE),
+              (6, 'Kiến Trúc Sư Phần Mềm (Software Architect)', 'TECH_ARCH', 'Thiết kế hệ thống và tiêu chuẩn kỹ thuật', 3, TRUE),
+              (7, 'Trưởng Nhóm Kỹ Thuật (Tech Lead)', 'TECH_LEAD', 'Quản lý kỹ thuật và dẫn dắt đội ngũ kỹ sư', 3, TRUE),
+              (8, 'Kỹ Sư Phần Mềm Cao Cấp (Senior Software Engineer)', 'DEV_SR', 'Phát triển backend/frontend các sản phẩm lõi', 3, TRUE),
+              (9, 'Trưởng Phòng Tài Chính (Finance Manager)', 'FIN_MGR', 'Quản lý tài chính kế toán và lương bổng', 5, TRUE),
+              (10, 'Giám Đốc Tiếp Thị (Marketing Director)', 'MKT_DIR', 'Chiến lược truyền thông thương hiệu tuyển dụng', 4, TRUE)
+              ON CONFLICT (id) DO NOTHING;
+
+              -- 5. Thêm 4 tài khoản nhân viên nội bộ mới nếu chưa có
+              INSERT INTO users (id, email, password_hash, full_name, phone, role_id, is_active) VALUES
+              (17, 'cto@recruitment.com', '$2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK', 'Vũ Hoàng Nam (CTO)', '0909111222', 1, TRUE),
+              (18, 'architect@recruitment.com', '$2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK', 'Ngô Quốc Huy (Software Architect)', '0909222333', 4, TRUE),
+              (19, 'finance.lead@recruitment.com', '$2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK', 'Trần Thảo Ly (Finance Lead)', '0909333444', 2, TRUE),
+              (20, 'mkt.director@recruitment.com', '$2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK', 'Dương Minh Hưng (Marketing Director)', '0909444555', 2, TRUE)
+              ON CONFLICT (id) DO NOTHING;
+
+              -- 6. Dữ liệu mẫu 10 Hồ sơ nhân sự (employees)
+              INSERT INTO employees (
+                  id, user_id, employee_code, short_name, phone, gender, dob, address,
+                  cccd, cccd_issue_date, cccd_issue_place, bank_account, bank_name,
+                  join_date, contract_type, contract_start_date, contract_end_date,
+                  department_id, position_id, status, is_delete
+              ) VALUES
+              (1, 1, 'EMP-001', 'Admin', '0901234567', 1, '1988-05-12', '120 Trần Duy Hưng, Cầu Giấy, Hà Nội', '001088001122', '2021-06-15', 'Cục CS QLHC về TTXH', '19033445566778', 'Techcombank', '2020-01-01', 'OFFICIAL', '2020-01-01', NULL, 1, 1, 1, FALSE),
+              (2, 2, 'EMP-002', 'HaTran', '0912345678', 0, '1992-09-20', '45 Nguyễn Chí Thanh, Ba Đình, Hà Nội', '001092002233', '2021-08-10', 'Cục CS QLHC về TTXH', '1029384756', 'Vietcombank', '2021-03-15', 'OFFICIAL', '2021-03-15', NULL, 2, 2, 1, FALSE),
+              (3, 3, 'EMP-003', 'LeRec', '0923456789', 1, '1995-11-05', '88 Cầu Giấy, Quan Hoa, Hà Nội', '001095003344', '2022-01-20', 'Cục CS QLHC về TTXH', '0451000123456', 'Vietcombank', '2022-06-01', 'OFFICIAL', '2022-06-01', NULL, 2, 3, 1, FALSE),
+              (4, 4, 'EMP-004', 'PhamTech', '0934567890', 1, '1990-03-15', '16 Láng Hạ, Đống Đa, Hà Nội', '001090004455', '2020-11-12', 'Cục CS QLHC về TTXH', '1240000889977', 'MB Bank', '2021-01-10', 'OFFICIAL', '2021-01-10', NULL, 3, 7, 1, FALSE),
+              (5, 9, 'EMP-005', 'HuyBui', '0989012345', 1, '1996-07-28', '210 Lê Trọng Tấn, Thanh Xuân, Hà Nội', '001096005566', '2022-04-18', 'Cục CS QLHC về TTXH', '998877665544', 'VPBank', '2023-02-15', 'OFFICIAL', '2023-02-15', NULL, 2, 4, 1, FALSE),
+              (6, 10, 'EMP-006', 'DinhHung', '0990123456', 1, '1989-12-08', '56 Hoàng Đạo Thúy, Cầu Giấy, Hà Nội', '001089006677', '2021-05-25', 'Cục CS QLHC về TTXH', '190223344556', 'Techcombank', '2021-08-01', 'OFFICIAL', '2021-08-01', NULL, 3, 6, 1, FALSE),
+              (7, 17, 'EMP-007', 'NamVu', '0909111222', 1, '1985-04-10', '78 Thụy Khuê, Tây Hồ, Hà Nội', '001085007788', '2020-03-14', 'Cục CS QLHC về TTXH', '0011000998877', 'Vietcombank', '2020-05-01', 'OFFICIAL', '2020-05-01', NULL, 3, 5, 1, FALSE),
+              (8, 18, 'EMP-008', 'HuyNgo', '0909222333', 1, '1991-08-25', '32 Vạn Bảo, Ba Đình, Hà Nội', '001091008899', '2021-09-09', 'Cục CS QLHC về TTXH', '108877665544', 'ACB', '2022-03-01', 'OFFICIAL', '2022-03-01', NULL, 3, 6, 1, FALSE),
+              (9, 19, 'EMP-009', 'LyTran', '0909333444', 0, '1993-02-14', '99 Kim Mã, Ba Đình, Hà Nội', '001093009900', '2022-02-22', 'Cục CS QLHC về TTXH', '0988776655', 'TPBank', '2022-10-15', 'OFFICIAL', '2022-10-15', NULL, 5, 9, 1, FALSE),
+              (10, 20, 'EMP-010', 'HungDuong', '0909444555', 1, '1994-06-30', '152 Xã Đàn, Đống Đa, Hà Nội', '001094001133', '2022-07-07', 'Cục CS QLHC về TTXH', '2151000345678', 'BIDV', '2023-05-02', 'PROBATION', '2023-05-02', '2023-07-02', 4, 10, 1, FALSE)
+              ON CONFLICT (id) DO NOTHING;
+
+              -- Cập nhật sequence của bảng positions và employees
+              SELECT setval('positions_id_seq', (SELECT COALESCE(MAX(id), 1) FROM positions));
+              SELECT setval('employees_id_seq', (SELECT COALESCE(MAX(id), 1) FROM employees));
+              SELECT setval('users_id_seq', (SELECT COALESCE(MAX(id), 1) FROM users));

@@ -55,6 +55,7 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/jobs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/departments/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/positions/**").permitAll()
                         .requestMatchers("/admin/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_HR_MANAGER", "ROLE_RECRUITER", "ROLE_INTERVIEWER")
                         .requestMatchers("/candidate/**").hasAuthority("ROLE_CANDIDATE")
                         .anyRequest().authenticated()

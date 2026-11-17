@@ -10,4 +10,5 @@ export * from './savedJobApi';
 export * from './notificationApi';
 export * from './userApi';
 export * from './departmentApi';
+export * from './employeeApi';
 

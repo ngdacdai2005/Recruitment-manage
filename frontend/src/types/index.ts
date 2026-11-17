@@ -167,3 +167,51 @@ export interface DashboardStats {
   conversionRate: number;
 }
 
+export type Gender = 'FEMALE' | 'MALE' | 'OTHER';
+export type ContractType = 'OFFICIAL' | 'PROBATION' | 'PART_TIME' | 'INTERN';
+
+export interface Position {
+  id: number;
+  name: string;
+  code: string;
+  description?: string;
+  departmentId?: number;
+  departmentName?: string;
+  isActive: boolean;
+  createdAt?: string;
+}
+
+export interface Employee {
+  id: number;
+  userId: number;
+  employeeCode: string;
+  email: string;
+  fullName: string;
+  shortName?: string;
+  phone: string;
+  gender: Gender;
+  genderCode?: number;
+  dob?: string;
+  address?: string;
+  avatar?: string;
+  profile?: string;
+  cccd?: string;
+  cccdIssueDate?: string;
+  cccdIssuePlace?: string;
+  bankAccount?: string;
+  bankName?: string;
+  joinDate: string;
+  contractType: ContractType;
+  contractStartDate?: string;
+  contractEndDate?: string;
+  departmentId?: number;
+  departmentName?: string;
+  positionId?: number;
+  positionName?: string;
+  roleName?: string;
+  status: number;
+  isDelete: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+

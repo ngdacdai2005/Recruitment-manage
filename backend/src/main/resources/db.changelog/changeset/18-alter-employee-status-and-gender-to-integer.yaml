@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 18-alter-employee-status-and-gender-to-integer
+      author: dacdai
+      validCheckSum:
+        - "1:any"
+      changes:
+        - sql:
+            splitStatements: true
+            endDelimiter: ";"
+            sql: |
+              -- Đổi kiểu dữ liệu từ SMALLINT sang INTEGER để khớp chính xác với Hibernate JPA Validator
+              ALTER TABLE employees ALTER COLUMN status TYPE INTEGER;
+              ALTER TABLE employees ALTER COLUMN gender TYPE INTEGER;

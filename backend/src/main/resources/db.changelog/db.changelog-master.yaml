@@ -31,4 +31,8 @@ databaseChangeLog:
       file: db.changelog/changeset/15-insert-audit-logs.yaml
   - include:
       file: db.changelog/changeset/16-add-token-fields-to-users.yaml
+  - include:
+      file: db.changelog/changeset/17-create-positions-and-employees.yaml
+  - include:
+      file: db.changelog/changeset/18-alter-employee-status-and-gender-to-integer.yaml
 
