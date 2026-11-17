@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Modal } from '../../../components/ui/Modal';
-import { Input } from '../../../components/ui/Input';
-import { Select } from '../../../components/ui/Select';
-import { Button } from '../../../components/ui/Button';
-import { Branch, CreateBranchDto } from '../types/branch.types';
+import { Modal } from '@/components/ui/Modal';
+import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
+import { Button } from '@/components/ui/Button';
+import { Branch, CreateBranchDto } from '@/types/branch.types';
 
 export interface BranchFormModalProps {
   isOpen: boolean;

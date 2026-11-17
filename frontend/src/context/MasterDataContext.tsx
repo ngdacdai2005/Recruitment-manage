@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Department, Position } from '../types';
-import { Branch } from '../features/branches/types/branch.types';
+import { Branch } from '@/types/branch.types';
 import { departmentApi } from '../api/departmentApi';
 import { positionApi } from '../api/employeeApi';
-import { branchApi } from '../features/branches/api/branchApi';
+import { branchApi } from '@/api/branchApi';
 import { mockDepartments, mockPositions } from '../data/mockData';
-import { mockBranches } from '../features/branches/mockBranches';
+import { mockBranches } from '@/data/mockBranches';
 import { useAuth } from './AuthContext';
 
 interface MasterDataContextType {

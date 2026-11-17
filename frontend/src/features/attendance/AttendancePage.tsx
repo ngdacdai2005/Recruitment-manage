@@ -1,10 +1,10 @@
 import React from 'react';
 import './AttendancePage.css';
-import { useAttendance } from './hooks/useAttendance';
+import { useAttendance } from '@/hooks/useAttendance';
 import { AttendanceStats } from './components/AttendanceStats';
 import { AttendanceFilter } from './components/AttendanceFilter';
 import { AttendanceTable } from './components/AttendanceTable';
-import { Button } from '../../components/ui/Button';
+import { Button } from '@/components/ui/Button';
 import { RefreshCw, Download } from 'lucide-react';
 
 export const AttendancePage: React.FC = () => {

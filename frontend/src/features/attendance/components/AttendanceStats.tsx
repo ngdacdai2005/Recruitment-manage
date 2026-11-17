@@ -1,6 +1,6 @@
 import React from 'react';
 import { Users, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
-import { AttendanceStatsSummary } from '../types/attendance.types';
+import { AttendanceStatsSummary } from '@/types/attendance.types';
 
 export interface AttendanceStatsProps {
   stats: AttendanceStatsSummary;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Building, CheckCircle2, Users, MapPin } from 'lucide-react';
-import { BranchStats } from '../types/branch.types';
+import { BranchStats } from '@/types/branch.types';
 
 export interface BranchStatCardsProps {
   stats: BranchStats;

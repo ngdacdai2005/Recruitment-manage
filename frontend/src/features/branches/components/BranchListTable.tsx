@@ -1,8 +1,8 @@
 import React from 'react';
 import { Eye, Edit3, Trash2, MapPin, Phone, Mail, Building } from 'lucide-react';
-import { Branch } from '../types/branch.types';
-import { getBranchStatusLabel, getBranchStatusColor } from '../utils/branchHelpers';
-import { Table, Column } from '../../../components/ui/Table';
+import { Branch } from '@/types/branch.types';
+import { getBranchStatusLabel, getBranchStatusColor } from '@/utils/branchHelpers';
+import { Table, Column } from '@/components/ui/Table';
 
 export interface BranchListTableProps {
   branches: Branch[];

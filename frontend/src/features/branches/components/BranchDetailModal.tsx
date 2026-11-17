@@ -1,8 +1,8 @@
 import React from 'react';
-import { Modal } from '../../../components/ui/Modal';
-import { Button } from '../../../components/ui/Button';
-import { Branch } from '../types/branch.types';
-import { getBranchStatusLabel, getBranchStatusColor } from '../utils/branchHelpers';
+import { Modal } from '@/components/ui/Modal';
+import { Button } from '@/components/ui/Button';
+import { Branch } from '@/types/branch.types';
+import { getBranchStatusLabel, getBranchStatusColor } from '@/utils/branchHelpers';
 import { Building, MapPin, Phone, Mail, User, Calendar, Users } from 'lucide-react';
 
 export interface BranchDetailModalProps {

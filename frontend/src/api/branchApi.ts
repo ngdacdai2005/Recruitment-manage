@@ -1,6 +1,6 @@
-import { axiosClient } from '../../../api/axiosClient';
-import { Branch, CreateBranchDto, UpdateBranchDto } from '../types/branch.types';
-import { mockBranches } from '../mockBranches';
+import { axiosClient } from './axiosClient';
+import { Branch, CreateBranchDto, UpdateBranchDto } from '@/types/branch.types';
+import { mockBranches } from '@/data/mockBranches';
 
 export const branchApi = {
   getBranches: async (): Promise<Branch[]> => {

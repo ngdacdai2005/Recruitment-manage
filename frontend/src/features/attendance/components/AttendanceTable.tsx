@@ -1,6 +1,6 @@
 import React from 'react';
-import { Table, Column } from '../../../components/ui/Table';
-import { AttendanceRecord, AttendanceStatus } from '../types/attendance.types';
+import { Table, Column } from '@/components/ui/Table';
+import { AttendanceRecord, AttendanceStatus } from '@/types/attendance.types';
 
 export interface AttendanceTableProps {
   records: AttendanceRecord[];

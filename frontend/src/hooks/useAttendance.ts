@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
-import { AttendanceRecord, AttendanceStatsSummary } from '../types/attendance.types';
-import { attendanceApi, mockAttendanceRecords } from '../api/attendanceApi';
+import { AttendanceRecord, AttendanceStatsSummary } from '@/types/attendance.types';
+import { attendanceApi, mockAttendanceRecords } from '@/api/attendanceApi';
 
 export function useAttendance() {
   const [records, setRecords] = useState<AttendanceRecord[]>(mockAttendanceRecords);

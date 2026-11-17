@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import './BranchesPage.css';
-import { useBranches } from './hooks/useBranches';
-import { Branch } from './types/branch.types';
+import { useBranches } from '@/hooks/useBranches';
+import { Branch } from '@/types/branch.types';
 import { BranchStatCards } from './components/BranchStatCards';
 import { BranchListTable } from './components/BranchListTable';
 import { BranchFormModal } from './components/BranchFormModal';
 import { BranchDetailModal } from './components/BranchDetailModal';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
-import { Select } from '../../components/ui/Select';
-import { ConfirmDialog } from '../../components/feedback/ConfirmDialog';
-import { Toast, ToastType } from '../../components/feedback/Toast';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
+import { ConfirmDialog } from '@/components/feedback/ConfirmDialog';
+import { Toast, ToastType } from '@/components/feedback/Toast';
 import { Plus, Search, RefreshCw, Building } from 'lucide-react';
 
 export const BranchesPage: React.FC = () => {

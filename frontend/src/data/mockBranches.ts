@@ -1,4 +1,4 @@
-import { Branch, BranchStats } from './types/branch.types';
+import { Branch, BranchStats } from '../types/branch.types';
 
 export const mockBranches: Branch[] = [
   {

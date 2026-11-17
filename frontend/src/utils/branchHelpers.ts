@@ -1,4 +1,4 @@
-import { BranchStatus } from '../types/branch.types';
+import { BranchStatus } from '@/types/branch.types';
 
 export const getBranchStatusLabel = (status: BranchStatus): string => {
   switch (status) {

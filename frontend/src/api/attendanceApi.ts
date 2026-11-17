@@ -1,5 +1,5 @@
-import { axiosClient } from '../../../api/axiosClient';
-import { AttendanceRecord, AttendanceStatsSummary } from '../types/attendance.types';
+import { axiosClient } from './axiosClient';
+import { AttendanceRecord, AttendanceStatsSummary } from '@/types/attendance.types';
 
 export const mockAttendanceRecords: AttendanceRecord[] = [
   {

@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Branch, BranchStats, CreateBranchDto, UpdateBranchDto } from '../types/branch.types';
-import { branchApi } from '../api/branchApi';
-import { mockBranches, mockBranchStats } from '../mockBranches';
+import { Branch, BranchStats, CreateBranchDto, UpdateBranchDto } from '@/types/branch.types';
+import { branchApi } from '@/api/branchApi';
+import { mockBranches, mockBranchStats } from '@/data/mockBranches';
 
 export function useBranches() {
   const [branches, setBranches] = useState<Branch[]>(mockBranches);

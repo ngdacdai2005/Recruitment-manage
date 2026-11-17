@@ -1,7 +1,7 @@
 import React from 'react';
 import { Search, Calendar } from 'lucide-react';
-import { Input } from '../../../components/ui/Input';
-import { Select } from '../../../components/ui/Select';
+import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
 
 export interface AttendanceFilterProps {
   keyword: string;
