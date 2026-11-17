@@ -1,12 +1,10 @@
 import React from 'react';
 import './AuthPage.css';
-import { useAuth } from '@/context/AuthContext';
-import { Briefcase } from 'lucide-react';
+import { Briefcase, ArrowLeft } from 'lucide-react';
 import { LoginForm } from './components/LoginForm';
+import { Link } from 'react-router-dom';
 
 export const AuthPage: React.FC = () => {
-  const { loginAs } = useAuth();
-
   return (
     <div className="auth-page-container flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200 shadow-xl p-8 space-y-6">
@@ -22,34 +20,14 @@ export const AuthPage: React.FC = () => {
 
         <LoginForm />
 
-        <div className="pt-4 border-t border-slate-200 space-y-3">
-          <p className="text-center text-xs font-semibold text-slate-400">DEMO: Đăng nhập nhanh theo vai trò</p>
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            <button
-              onClick={() => loginAs('ROLE_SUPER_ADMIN')}
-              className="p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 font-bold text-slate-700 text-center transition-colors"
-            >
-              👑 Super Admin
-            </button>
-            <button
-              onClick={() => loginAs('ROLE_HR_MANAGER')}
-              className="p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 font-bold text-slate-700 text-center transition-colors"
-            >
-              💼 HR Manager
-            </button>
-            <button
-              onClick={() => loginAs('ROLE_RECRUITER')}
-              className="p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 font-bold text-slate-700 text-center transition-colors"
-            >
-              🎯 Recruiter
-            </button>
-            <button
-              onClick={() => loginAs('ROLE_CANDIDATE')}
-              className="p-2.5 rounded-xl border border-indigo-200 bg-indigo-50/50 hover:bg-indigo-100/50 font-bold text-indigo-700 text-center transition-colors"
-            >
-              👤 Ứng Viên
-            </button>
-          </div>
+        <div className="pt-2 text-center">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-indigo-600 transition-colors"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Quay lại trang chủ tuyển dụng</span>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,120 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom';
-import { Briefcase, UserCheck, ShieldAlert, ChevronDown, ExternalLink } from 'lucide-react';
+import { Briefcase, UserCheck, ShieldAlert, LogIn, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Footer } from './Footer';
 import { appConfig } from '../config/app.config';
-import { UserRole } from '../types';
 
 export const PublicLayout: React.FC<{ onApplyClick?: (job: any) => void }> = ({ onApplyClick }) => {
-  const { currentUser, currentRole, loginAs, isBackendOnline, checkConnection } = useAuth();
-  const [showRoleMenu, setShowRoleMenu] = useState(false);
+  const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
-
-  const rolesList: { role: UserRole; label: string; desc: string }[] = [
-    { role: 'ROLE_HR_MANAGER', label: 'HR Manager', desc: 'Trưởng phòng tuyển dụng' },
-    { role: 'ROLE_RECRUITER', label: 'Recruiter', desc: 'Chuyên viên tuyển dụng' },
-    { role: 'ROLE_INTERVIEWER', label: 'Interviewer', desc: 'Tech Lead phỏng vấn' },
-    { role: 'ROLE_SUPER_ADMIN', label: 'Super Admin', desc: 'Quản trị viên toàn quyền' },
-    { role: 'ROLE_CANDIDATE', label: 'Candidate', desc: 'Ứng viên tìm việc' },
-  ];
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
-      {/* Top Banner */}
       <header className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
-        <div className="bg-slate-900 text-white text-xs px-4 py-1.5 flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span className="text-slate-400 font-medium">Chuyển khu vực:</span>
-            <div className="inline-flex rounded-md bg-slate-800 p-0.5 border border-slate-700">
-              <Link
-                to={appConfig.routes.public.home}
-                className="px-2.5 py-1 rounded transition-all font-medium flex items-center gap-1.5 bg-indigo-600 text-white shadow-sm"
-              >
-                <ExternalLink className="w-3.5 h-3.5" />
-                1. Public Website
-              </Link>
-              <Link
-                to={appConfig.routes.candidate.dashboard}
-                onClick={() => {
-                  if (currentRole !== 'ROLE_CANDIDATE') loginAs('ROLE_CANDIDATE');
-                }}
-                className="px-2.5 py-1 rounded transition-all font-medium flex items-center gap-1.5 text-slate-300 hover:text-white"
-              >
-                <UserCheck className="w-3.5 h-3.5" />
-                2. Candidate Portal
-              </Link>
-              <Link
-                to={appConfig.routes.admin.dashboard}
-                onClick={() => {
-                  if (currentRole === 'ROLE_CANDIDATE') loginAs('ROLE_HR_MANAGER');
-                }}
-                className="px-2.5 py-1 rounded transition-all font-medium flex items-center gap-1.5 text-slate-300 hover:text-white"
-              >
-                <ShieldAlert className="w-3.5 h-3.5" />
-                3. Admin / ATS Portal
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => checkConnection()}
-              className="hidden lg:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono transition-colors border"
-              style={{
-                backgroundColor: isBackendOnline ? 'rgba(6, 78, 59, 0.4)' : 'rgba(120, 53, 15, 0.4)',
-                color: isBackendOnline ? '#34d399' : '#fcd34d',
-                borderColor: isBackendOnline ? '#059669' : '#d97706'
-              }}
-            >
-              <span className={`w-1.5 h-1.5 rounded-full ${isBackendOnline ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`}></span>
-              <span>{isBackendOnline ? 'Backend: Connected' : 'Demo Mode (Offline)'}</span>
-            </button>
-
-            <div className="relative">
-              <button
-                onClick={() => setShowRoleMenu(!showRoleMenu)}
-                className="bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-700/60 text-indigo-200 px-3 py-1 rounded flex items-center gap-2 font-medium"
-              >
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>{currentUser ? currentUser.fullName : 'Chưa đăng nhập'}</span>
-                <ChevronDown className="w-3.5 h-3.5" />
-              </button>
-
-              {showRoleMenu && (
-                <div className="absolute right-0 mt-2 w-72 bg-white text-slate-800 rounded-lg shadow-xl border border-slate-200 py-1.5 z-50">
-                  <div className="px-3 py-1.5 text-[11px] font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-100">
-                    Chuyển đổi Role để trải nghiệm
-                  </div>
-                  {rolesList.map(item => (
-                    <button
-                      key={item.role}
-                      onClick={() => {
-                        loginAs(item.role);
-                        setShowRoleMenu(false);
-                        if (item.role === 'ROLE_CANDIDATE') {
-                          navigate(appConfig.routes.candidate.dashboard);
-                        } else {
-                          navigate(appConfig.routes.admin.dashboard);
-                        }
-                      }}
-                      className={`w-full text-left px-3 py-2 text-xs flex flex-col hover:bg-slate-50 transition-colors ${
-                        currentRole === item.role ? 'bg-indigo-50 text-indigo-700 font-semibold' : ''
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span>{item.label}</span>
-                        {currentRole === item.role && <span className="text-[10px] bg-indigo-100 text-indigo-800 px-1.5 py-0.5 rounded">Đang chọn</span>}
-                      </div>
-                      <span className="text-[11px] text-slate-500 font-normal">{item.desc}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
         {/* Main Navbar */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={appConfig.routes.public.home} className="flex items-center gap-3 group">
@@ -165,6 +62,63 @@ export const PublicLayout: React.FC<{ onApplyClick?: (job: any) => void }> = ({ 
               Văn hóa & Đãi ngộ
             </NavLink>
           </nav>
+
+          {/* Right Action / Auth Section */}
+          <div className="flex items-center gap-3">
+            {currentUser ? (
+              <div className="flex items-center gap-2.5">
+                {currentUser.role === 'ROLE_CANDIDATE' ? (
+                  <Link
+                    to={appConfig.routes.candidate.dashboard}
+                    className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 text-indigo-700 hover:bg-indigo-100 text-xs font-semibold transition-colors"
+                  >
+                    <UserCheck className="w-4 h-4" />
+                    Bàn làm việc Ứng viên
+                  </Link>
+                ) : (
+                  <Link
+                    to={appConfig.routes.admin.dashboard}
+                    className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 text-indigo-700 hover:bg-indigo-100 text-xs font-semibold transition-colors"
+                  >
+                    <ShieldAlert className="w-4 h-4" />
+                    Trang quản trị ATS
+                  </Link>
+                )}
+
+                <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
+                  <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs">
+                    {currentUser.fullName ? currentUser.fullName.charAt(0).toUpperCase() : 'U'}
+                  </div>
+                  <div className="hidden lg:block text-left text-xs">
+                    <p className="font-semibold text-slate-800 leading-tight">{currentUser.fullName}</p>
+                    <p className="text-[10px] text-slate-500 capitalize">
+                      {currentUser.role === 'ROLE_CANDIDATE' ? 'Ứng viên' : currentUser.role.replace('ROLE_', '').replace('_', ' ')}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      logout();
+                      navigate('/');
+                    }}
+                    title="Đăng xuất"
+                    className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors ml-1"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/auth"
+                  className="px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm shadow-indigo-200 transition-all flex items-center gap-1.5"
+                >
+                  <LogIn className="w-4 h-4" />
+                  Đăng nhập
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 

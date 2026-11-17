@@ -7,11 +7,11 @@ import { useNavigate } from 'react-router-dom';
 import { appConfig } from '@/config/app.config';
 
 export const LoginForm: React.FC = () => {
-  const { login, currentRole } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('admin@recruitment.com');
-  const [password, setPassword] = useState('Admin123@');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,9 +20,9 @@ export const LoginForm: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const ok = await login(email, password);
-      if (ok) {
-        if (currentRole === 'ROLE_CANDIDATE') {
+      const loggedUser = await login(email, password);
+      if (loggedUser) {
+        if (loggedUser.role === 'ROLE_CANDIDATE') {
           navigate(appConfig.routes.candidate.dashboard);
         } else {
           navigate(appConfig.routes.admin.dashboard);

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   X, 
   UploadCloud, 
@@ -7,7 +8,8 @@ import {
   AlertCircle, 
   DollarSign, 
   Calendar, 
-  Send 
+  Send,
+  LogIn
 } from 'lucide-react';
 import { Job, Application } from '../../types';
 import { useAuth } from '../../context/AuthContext';
@@ -28,16 +30,17 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
   onSubmitSuccess,
   existingApplications
 }) => {
-  const { currentUser, loginAs, isBackendOnline } = useAuth();
+  const { currentUser, isBackendOnline } = useAuth();
+  const navigate = useNavigate();
 
-  const [fullName, setFullName] = useState(currentUser?.fullName || 'Đỗ Văn Ứng Viên');
-  const [email, setEmail] = useState(currentUser?.email || 'candidate@example.com');
-  const [phone, setPhone] = useState('0945678901');
-  const [expectedSalary, setExpectedSalary] = useState<string>('25000000');
-  const [availableDate, setAvailableDate] = useState<string>('2026-12-01');
-  const [coverLetter, setCoverLetter] = useState<string>('Tôi rất mong muốn được cống hiến và đồng hành cùng công ty.');
+  const [fullName, setFullName] = useState(currentUser?.fullName || '');
+  const [email, setEmail] = useState(currentUser?.email || '');
+  const [phone, setPhone] = useState('');
+  const [expectedSalary, setExpectedSalary] = useState<string>('');
+  const [availableDate, setAvailableDate] = useState<string>('');
+  const [coverLetter, setCoverLetter] = useState<string>('');
   const [cvFile, setCvFile] = useState<File | null>(null);
-  const [fileName, setFileName] = useState<string>('CV_DoVanUngVien_Fullstack.pdf');
+  const [fileName, setFileName] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -64,6 +67,16 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!currentUser) {
+      setErrorMsg('Vui lòng đăng nhập với tài khoản Ứng viên để nộp hồ sơ ứng tuyển.');
+      return;
+    }
+
+    if (currentUser.role !== 'ROLE_CANDIDATE') {
+      setErrorMsg('Bạn đang đăng nhập với vai trò Quản trị viên/HR. Vui lòng đăng nhập tài khoản Ứng viên để ứng tuyển.');
+      return;
+    }
 
     if (hasAlreadyApplied) {
       setErrorMsg('Bạn đã nộp hồ sơ vào vị trí này rồi. Vui lòng theo dõi tiến trình tại mục "Hồ sơ của tôi".');
@@ -148,6 +161,26 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="p-6 space-y-5">
+            {!currentUser && (
+              <div className="p-4 bg-indigo-50 border border-indigo-200 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-indigo-900">
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="w-5 h-5 text-indigo-600 shrink-0" />
+                  <span>Vui lòng đăng nhập với tài khoản Ứng viên để gửi hồ sơ và theo dõi tiến trình tuyển dụng.</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    navigate('/auth');
+                  }}
+                  className="px-3.5 py-1.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shrink-0 flex items-center justify-center gap-1.5"
+                >
+                  <LogIn className="w-3.5 h-3.5" />
+                  <span>Đăng nhập ngay</span>
+                </button>
+              </div>
+            )}
+
             {hasAlreadyApplied && (
               <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3 text-xs text-amber-800">
                 <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
