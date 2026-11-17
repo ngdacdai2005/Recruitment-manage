@@ -24,10 +24,10 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     boolean existsByCccd(String cccd);
 
     @Query("SELECT e FROM Employee e WHERE " +
-           "(:keyword IS NULL OR LOWER(e.employeeCode) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-           "OR LOWER(e.user.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-           "OR LOWER(e.phone) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-           "OR LOWER(e.user.email) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+           "(:keyword IS NULL OR LOWER(e.employeeCode) LIKE LOWER(CONCAT('%', CAST(:keyword AS string), '%')) " +
+           "OR LOWER(e.user.fullName) LIKE LOWER(CONCAT('%', CAST(:keyword AS string), '%')) " +
+           "OR LOWER(e.phone) LIKE LOWER(CONCAT('%', CAST(:keyword AS string), '%')) " +
+           "OR LOWER(e.user.email) LIKE LOWER(CONCAT('%', CAST(:keyword AS string), '%'))) " +
            "AND (:departmentId IS NULL OR e.department.id = :departmentId) " +
            "AND (:positionId IS NULL OR e.position.id = :positionId) " +
            "AND (:status IS NULL OR e.status = :status)")

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { 
-  UserCheck, 
-  ShieldAlert, 
-  ChevronDown, 
+import {
+  UserCheck,
+  ShieldAlert,
+  ChevronDown,
   ExternalLink,
   Bell,
   LogOut,
@@ -105,9 +105,8 @@ export const AdminTopbar: React.FC = () => {
                       navigate('/admin/dashboard');
                     }
                   }}
-                  className={`w-full text-left px-3.5 py-2 text-xs flex flex-col hover:bg-slate-50 transition-colors ${
-                    currentRole === item.role ? 'bg-indigo-50 text-indigo-700 font-semibold' : ''
-                  }`}
+                  className={`w-full text-left px-3.5 py-2 text-xs flex flex-col hover:bg-slate-50 transition-colors ${currentRole === item.role ? 'bg-indigo-50 text-indigo-700 font-semibold' : ''
+                    }`}
                 >
                   <div className="flex items-center justify-between">
                     <span>{item.label}</span>

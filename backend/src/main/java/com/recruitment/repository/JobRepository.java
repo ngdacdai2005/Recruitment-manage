@@ -17,9 +17,9 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     Optional<Job> findBySlug(String slug);
 
     @Query("SELECT j FROM Job j WHERE j.status = com.recruitment.entity.enums.JobStatus.PUBLISHED " +
-           "AND (:keyword IS NULL OR LOWER(j.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(j.description) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+           "AND (:keyword IS NULL OR LOWER(j.title) LIKE LOWER(CONCAT('%', CAST(:keyword AS string), '%')) OR LOWER(j.description) LIKE LOWER(CONCAT('%', CAST(:keyword AS string), '%'))) " +
            "AND (:departmentId IS NULL OR j.department.id = :departmentId) " +
-           "AND (:location IS NULL OR LOWER(j.location) LIKE LOWER(CONCAT('%', :location, '%'))) " +
+           "AND (:location IS NULL OR LOWER(j.location) LIKE LOWER(CONCAT('%', CAST(:location AS string), '%'))) " +
            "AND (:jobLevel IS NULL OR j.jobLevel = :jobLevel) " +
            "AND (:employmentType IS NULL OR j.employmentType = :employmentType)")
     Page<Job> searchPublicJobs(
@@ -32,7 +32,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     );
 
     @Query("SELECT j FROM Job j WHERE " +
-           "(:keyword IS NULL OR LOWER(j.title) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+           "(:keyword IS NULL OR LOWER(j.title) LIKE LOWER(CONCAT('%', CAST(:keyword AS string), '%'))) " +
            "AND (:status IS NULL OR j.status = :status) " +
            "AND (:departmentId IS NULL OR j.department.id = :departmentId)")
     Page<Job> searchAdminJobs(

@@ -21,7 +21,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     @Query("SELECT a FROM Application a WHERE " +
            "(:jobId IS NULL OR a.job.id = :jobId) " +
            "AND (:status IS NULL OR a.currentStatus = :status) " +
-           "AND (:keyword IS NULL OR LOWER(a.candidate.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(a.candidate.email) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+           "AND (:keyword IS NULL OR LOWER(a.candidate.fullName) LIKE LOWER(CONCAT('%', CAST(:keyword AS string), '%')) OR LOWER(a.candidate.email) LIKE LOWER(CONCAT('%', CAST(:keyword AS string), '%')))")
     Page<Application> searchAdminApplications(
             @Param("jobId") Long jobId,
             @Param("status") ApplicationStatus status,
