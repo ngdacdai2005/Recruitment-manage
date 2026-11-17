@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Application } from '@/types';
-import { mockApplications } from '@/data/mockData';
 import { useAuth } from '@/context/AuthContext';
 import { applicationApi } from '@/api';
 import { ApplicationTrackingPage } from './components/ApplicationTrackingView';
@@ -9,22 +8,26 @@ import { Link } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes.constants';
 
 export const MyApplicationsPage: React.FC = () => {
-  const { currentUser, isBackendOnline } = useAuth();
-  const [applications, setApplications] = useState<Application[]>(mockApplications);
+  const { currentUser } = useAuth();
+  const [applications, setApplications] = useState<Application[]>([]);
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
 
   useEffect(() => {
-    if (isBackendOnline) {
-      applicationApi.getMyApplications()
-        .then(res => {
-          if (res && res.length > 0) setApplications(res);
-        })
-        .catch(err => console.warn('Could not fetch applications:', err));
-    }
-  }, [isBackendOnline]);
+    let isMounted = true;
+    applicationApi.getMyApplications()
+      .then(res => {
+        if (isMounted) setApplications(res || []);
+      })
+      .catch(err => {
+        console.warn('Could not fetch applications:', err);
+        if (isMounted) setApplications([]);
+      });
+
+    return () => { isMounted = false; };
+  }, []);
 
   const myApps = applications.filter(
-    app => app.candidate.email.toLowerCase() === (currentUser?.email || 'candidate@example.com').toLowerCase()
+    app => !currentUser?.email || app.candidate.email.toLowerCase() === currentUser.email.toLowerCase()
   );
 
   if (selectedApp) {

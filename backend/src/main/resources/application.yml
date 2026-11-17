@@ -27,6 +27,10 @@ spring:
     clear-checksums: true
     drop-first: false
 
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
   data:
     redis:
       host: ${SPRING_REDIS_HOST:localhost}

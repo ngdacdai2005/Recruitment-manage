@@ -1,5 +1,7 @@
 package com.recruitment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -10,6 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "departments")
 @EntityListeners(AuditingEntityListener.class)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -30,9 +33,14 @@ public class Department {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
     private User manager;
+
+    public Integer getManagerId() {
+        return manager != null ? Math.toIntExact(manager.getId()) : null;
+    }
 
     @Builder.Default
     @Column(nullable = false)

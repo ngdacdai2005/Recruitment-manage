@@ -1,5 +1,6 @@
 package com.recruitment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.recruitment.entity.enums.ApplicationStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
         @UniqueConstraint(columnNames = {"candidate_id", "job_id"})
 })
 @EntityListeners(AuditingEntityListener.class)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Getter
 @Setter
 @NoArgsConstructor

@@ -1,5 +1,7 @@
 package com.recruitment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.recruitment.entity.enums.JobStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "jobs")
 @EntityListeners(AuditingEntityListener.class)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -72,6 +75,7 @@ public class Job {
     @Builder.Default
     private JobStatus status = JobStatus.DRAFT;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
     private User createdBy;

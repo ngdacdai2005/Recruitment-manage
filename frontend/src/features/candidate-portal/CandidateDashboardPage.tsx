@@ -2,35 +2,39 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CandidateDashboard } from './components/CandidateDashboardView';
 import { ApplicationTrackingPage } from './components/ApplicationTrackingView';
-import { mockApplications, mockInterviews } from '@/data/mockData';
 import { Application, Interview } from '@/types';
-import { useAuth } from '@/context/AuthContext';
 import { applicationApi, interviewApi } from '@/api';
 import { ROUTES } from '@/constants/routes.constants';
 
 export const CandidateDashboardPage: React.FC = () => {
-  const { isBackendOnline } = useAuth();
   const navigate = useNavigate();
 
-  const [applications, setApplications] = useState<Application[]>(mockApplications);
-  const [interviews, setInterviews] = useState<Interview[]>(mockInterviews);
+  const [applications, setApplications] = useState<Application[]>([]);
+  const [interviews, setInterviews] = useState<Interview[]>([]);
   const [trackingApp, setTrackingApp] = useState<Application | null>(null);
 
   useEffect(() => {
-    if (isBackendOnline) {
-      applicationApi.getMyApplications()
-        .then(res => {
-          if (res && res.length > 0) setApplications(res);
-        })
-        .catch(err => console.warn('Could not load my applications:', err));
+    let isMounted = true;
+    applicationApi.getMyApplications()
+      .then(res => {
+        if (isMounted) setApplications(res || []);
+      })
+      .catch(err => {
+        console.warn('Could not load my applications:', err);
+        if (isMounted) setApplications([]);
+      });
 
-      interviewApi.getCandidateInterviews()
-        .then((res: Interview[]) => {
-          if (res && res.length > 0) setInterviews(res);
-        })
-        .catch((err: any) => console.warn('Could not load my interviews:', err));
-    }
-  }, [isBackendOnline]);
+    interviewApi.getCandidateInterviews()
+      .then((res: Interview[]) => {
+        if (isMounted) setInterviews(res || []);
+      })
+      .catch((err: any) => {
+        console.warn('Could not load my interviews:', err);
+        if (isMounted) setInterviews([]);
+      });
+
+    return () => { isMounted = false; };
+  }, []);
 
   if (trackingApp) {
     return (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Search, 
   MapPin, 
@@ -13,8 +13,9 @@ import {
   DollarSign, 
   Bookmark 
 } from 'lucide-react';
-import { mockJobs, mockDepartments } from '@/data/mockData';
 import { useAuth } from '@/context/AuthContext';
+import { useMasterData } from '@/context/MasterDataContext';
+import { jobApi } from '@/api/jobApi';
 import { Job } from '@/types';
 
 interface HomePageProps {
@@ -27,13 +28,36 @@ export const HomePage: React.FC<HomePageProps> = ({ onSelectJob, onNavigateJobs,
   const [keyword, setKeyword] = useState('');
   const [deptId, setDeptId] = useState<number | undefined>();
   const { savedJobIds, toggleSaveJob } = useAuth();
+  const { departments } = useMasterData();
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    jobApi.getPublicJobs({ size: 10, sortBy: 'createdAt', direction: 'desc' })
+      .then(res => {
+        if (isMounted) {
+          setJobs(res?.content || []);
+        }
+      })
+      .catch(err => {
+        console.warn('Failed to load public jobs from API:', err);
+        if (isMounted) setJobs([]);
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+
+    return () => { isMounted = false; };
+  }, []);
+
+  const deptList = departments;
+  const featuredJobs = jobs.filter(j => j.status === 'PUBLISHED').slice(0, 3);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     onNavigateJobs({ keyword, departmentId: deptId });
   };
-
-  const featuredJobs = mockJobs.filter(j => j.status === 'PUBLISHED').slice(0, 3);
 
   return (
     <div className="space-y-16 pb-12">
@@ -83,7 +107,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onSelectJob, onNavigateJobs,
                 className="w-full text-slate-800 text-sm focus:outline-none bg-transparent cursor-pointer"
               >
                 <option value="">Tất cả phòng ban</option>
-                {mockDepartments.map(d => (
+                {deptList.map(d => (
                   <option key={d.id} value={d.id}>{d.name}</option>
                 ))}
               </select>
@@ -136,19 +160,35 @@ export const HomePage: React.FC<HomePageProps> = ({ onSelectJob, onNavigateJobs,
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {featuredJobs.map(job => {
-            const isSaved = savedJobIds.includes(job.id);
-            return (
-              <div
-                key={job.id}
-                className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm hover:shadow-xl hover:border-indigo-200 transition-all flex flex-col justify-between group"
-              >
-                <div className="space-y-4">
-                  <div className="flex items-start justify-between gap-2">
-                    <span className="text-[11px] font-semibold bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full">
-                      {job.department.name}
-                    </span>
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[1, 2, 3].map((n) => (
+              <div key={n} className="bg-white rounded-2xl border border-slate-200/80 p-6 animate-pulse space-y-4">
+                <div className="h-4 bg-slate-200 rounded w-1/3"></div>
+                <div className="h-6 bg-slate-200 rounded w-3/4"></div>
+                <div className="h-4 bg-slate-100 rounded w-full"></div>
+                <div className="h-10 bg-slate-100 rounded mt-6"></div>
+              </div>
+            ))}
+          </div>
+        ) : featuredJobs.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center text-slate-500 text-sm">
+            Hiện tại chưa có tin tuyển dụng nào được đăng tải trên hệ thống.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {featuredJobs.map(job => {
+              const isSaved = savedJobIds.includes(job.id);
+              return (
+                <div
+                  key={job.id}
+                  className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm hover:shadow-xl hover:border-indigo-200 transition-all flex flex-col justify-between group"
+                >
+                  <div className="space-y-4">
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="text-[11px] font-semibold bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full">
+                        {job.department?.name || 'Chung'}
+                      </span>
                     <button
                       onClick={() => toggleSaveJob(job.id)}
                       className={`p-2 rounded-lg transition-colors ${
@@ -203,6 +243,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onSelectJob, onNavigateJobs,
             );
           })}
         </div>
+        )}
       </section>
 
       {/* 3. Why Join Us (Employer Branding) */}

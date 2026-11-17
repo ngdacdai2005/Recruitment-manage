@@ -2,7 +2,6 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Department, Position } from '../types';
 import { departmentApi } from '../api/departmentApi';
 import { positionApi } from '../api/employeeApi';
-import { mockDepartments, mockPositions } from '../data/mockData';
 import { useAuth } from './AuthContext';
 
 interface MasterDataContextType {
@@ -16,21 +15,22 @@ const MasterDataContext = createContext<MasterDataContextType | undefined>(undef
 
 export const MasterDataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isBackendOnline, currentUser } = useAuth();
-  const [departments, setDepartments] = useState<Department[]>(mockDepartments);
-  const [positions, setPositions] = useState<Position[]>(mockPositions);
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [positions, setPositions] = useState<Position[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchMasterData = async () => {
-    if (!isBackendOnline) return;
     setIsLoading(true);
     try {
       const [deptRes, posRes] = await Promise.all([
-        departmentApi.getDepartments().catch(() => mockDepartments),
-        positionApi.getAllPositions().catch(() => mockPositions),
+        departmentApi.getDepartments().catch(() => [] as Department[]),
+        positionApi.getAllPositions().catch(() => [] as Position[]),
       ]);
 
-      if (deptRes && deptRes.length > 0) setDepartments(deptRes);
-      if (posRes && posRes.length > 0) setPositions(posRes);
+      if (deptRes) setDepartments(deptRes);
+      if (posRes) setPositions(posRes);
+    } catch (err) {
+      console.warn('Could not load master data:', err);
     } finally {
       setIsLoading(false);
     }

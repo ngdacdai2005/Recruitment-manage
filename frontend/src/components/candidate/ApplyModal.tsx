@@ -78,76 +78,36 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
     setIsSubmitting(true);
     setErrorMsg(null);
 
-    let uploadedUrl = 'https://storage.recruitment.com/cvs/' + (fileName || 'cv.pdf');
-    let uploadedFilename = fileName || 'cv.pdf';
+    try {
+      let uploadedUrl = '';
+      let uploadedFilename = fileName || '';
 
-    // Attempt real backend upload and application submission if backend is online
-    if (isBackendOnline) {
-      try {
-        if (cvFile) {
-          const uploadRes = await fileApi.uploadCv(cvFile);
-          uploadedUrl = uploadRes.fileUrl;
-          uploadedFilename = uploadRes.fileName;
-        }
-
-        const backendApp = await applicationApi.applyJob({
-          jobId: job.id,
-          fullName,
-          email,
-          phone,
-          expectedSalary: expectedSalary ? Number(expectedSalary) : undefined,
-          availableDate,
-          resumeUrl: uploadedUrl,
-          resumeFilename: uploadedFilename,
-          coverLetter,
-        });
-
-        setIsSubmitting(false);
-        setSuccess(true);
-        onSubmitSuccess(backendApp);
-        return;
-      } catch (err: any) {
-        console.warn('Real API apply error:', err);
-        if (err.status === 400 || err.status === 409 || err.status === 404) {
-          setIsSubmitting(false);
-          setErrorMsg(err.message || 'Có lỗi xảy ra khi nộp hồ sơ.');
-          return;
-        }
+      if (cvFile) {
+        const uploadRes = await fileApi.uploadCv(cvFile);
+        uploadedUrl = uploadRes.fileUrl;
+        uploadedFilename = uploadRes.fileName;
       }
-    }
 
-    // Fallback simulation when offline
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSuccess(true);
-
-      const newApp: Application = {
-        id: Date.now(),
-        candidate: {
-          id: currentUser?.id || 5,
-          fullName,
-          email,
-          phone,
-          headline: 'Ứng viên tiềm năng'
-        },
-        job: {
-          id: job.id,
-          title: job.title,
-          department: { name: job.department.name, code: job.department.code },
-          location: job.location
-        },
+      const backendApp = await applicationApi.applyJob({
+        jobId: job.id,
+        fullName,
+        email,
+        phone,
+        expectedSalary: expectedSalary ? Number(expectedSalary) : undefined,
+        availableDate,
         resumeUrl: uploadedUrl,
         resumeFilename: uploadedFilename,
         coverLetter,
-        expectedSalary: Number(expectedSalary),
-        availableDate,
-        currentStatus: 'APPLIED',
-        createdAt: new Date().toISOString().replace('T', ' ').substring(0, 16),
-        updatedAt: new Date().toISOString().replace('T', ' ').substring(0, 16)
-      };
+      });
 
-      onSubmitSuccess(newApp);
-    }, 600);
+      setIsSubmitting(false);
+      setSuccess(true);
+      onSubmitSuccess(backendApp);
+    } catch (err: any) {
+      console.error('Apply job error:', err);
+      setIsSubmitting(false);
+      setErrorMsg(err.message || 'Không thể gửi hồ sơ. Vui lòng kiểm tra kết nối Backend và thử lại.');
+    }
   };
 
   return (

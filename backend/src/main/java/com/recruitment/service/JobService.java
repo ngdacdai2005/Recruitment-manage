@@ -42,6 +42,12 @@ public class JobService {
     }
 
     public Job getJobBySlug(String slug) {
+        if (slug != null && slug.matches("^\\d+$")) {
+            try {
+                return getJobById(Long.parseLong(slug));
+            } catch (AppException ignored) {
+            }
+        }
         return jobRepository.findBySlug(slug)
                 .orElseThrow(() -> new AppException("Không tìm thấy tin tuyển dụng", HttpStatus.NOT_FOUND));
     }

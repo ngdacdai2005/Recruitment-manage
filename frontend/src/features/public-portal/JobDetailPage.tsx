@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ArrowLeft, 
   MapPin, 
@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { Job } from '@/types';
 import { useAuth } from '@/context/AuthContext';
-import { mockJobs } from '@/data/mockData';
+import { jobApi } from '@/api/jobApi';
 
 interface JobDetailPageProps {
   job: Job;
@@ -32,9 +32,27 @@ export const JobDetailPage: React.FC<JobDetailPageProps> = ({
   const { savedJobIds, toggleSaveJob } = useAuth();
   const isSaved = savedJobIds.includes(job.id);
 
-  const similarJobs = mockJobs
-    .filter(j => j.id !== job.id && (j.department.id === job.department.id || j.jobLevel === job.jobLevel))
-    .slice(0, 3);
+  const [similarJobs, setSimilarJobs] = useState<Job[]>([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    jobApi.getPublicJobs({ size: 10, sortBy: 'createdAt', direction: 'desc' })
+      .then(res => {
+        if (isMounted && res && res.content) {
+          const related = res.content.filter(j => 
+            j.id !== job.id && (j.department?.id === job.department?.id || j.jobLevel === job.jobLevel)
+          ).slice(0, 3);
+          setSimilarJobs(related.length > 0 ? related : res.content.filter(j => j.id !== job.id).slice(0, 3));
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setSimilarJobs([]);
+        }
+      });
+
+    return () => { isMounted = false; };
+  }, [job.id, job.department?.id, job.jobLevel]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -53,7 +71,7 @@ export const JobDetailPage: React.FC<JobDetailPageProps> = ({
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs font-semibold bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full">
-                {job.department.name}
+                {job.department?.name || 'Chung'}
               </span>
               <span className="text-xs font-medium bg-slate-100 text-slate-700 px-3 py-1 rounded-full">
                 Cấp bậc: {job.jobLevel}
@@ -187,7 +205,7 @@ export const JobDetailPage: React.FC<JobDetailPageProps> = ({
                     {item.title}
                   </h4>
                   <div className="flex justify-between items-center text-[11px] text-slate-500">
-                    <span>{item.department.name}</span>
+                    <span>{item.department?.name || 'Chung'}</span>
                     <span className="font-bold text-indigo-600">
                       {item.salaryMin ? `${(item.salaryMin/1000000).toFixed(0)}-${(item.salaryMax!/1000000).toFixed(0)}tr` : 'Thỏa thuận'}
                     </span>

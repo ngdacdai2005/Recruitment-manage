@@ -8,24 +8,25 @@ import { MyApplicationsPage } from '../features/candidate-portal/MyApplicationsP
 import { CandidateInterviewsPage } from '../features/candidate-portal/CandidateInterviewsPage';
 import { ProtectedRoute } from './guards/ProtectedRoute';
 import { RoleGuard } from './guards/RoleGuard';
-import { mockInterviews } from '../data/mockData';
 import { Interview } from '../types';
-import { useAuth } from '../context/AuthContext';
 import { interviewApi } from '../api';
 
 const CandidateInterviewsWrapper: React.FC = () => {
-  const { isBackendOnline } = useAuth();
-  const [interviews, setInterviews] = useState<Interview[]>(mockInterviews);
+  const [interviews, setInterviews] = useState<Interview[]>([]);
 
   useEffect(() => {
-    if (isBackendOnline) {
-      interviewApi.getCandidateInterviews()
-        .then((res: Interview[]) => {
-          if (res && res.length > 0) setInterviews(res);
-        })
-        .catch((err: any) => console.warn('Could not load candidate interviews:', err));
-    }
-  }, [isBackendOnline]);
+    let isMounted = true;
+    interviewApi.getCandidateInterviews()
+      .then((res: Interview[]) => {
+        if (isMounted) setInterviews(res || []);
+      })
+      .catch((err: any) => {
+        console.warn('Could not load candidate interviews:', err);
+        if (isMounted) setInterviews([]);
+      });
+
+    return () => { isMounted = false; };
+  }, []);
 
   return <CandidateInterviewsPage interviews={interviews} />;
 };

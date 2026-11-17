@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Search, 
   MapPin, 
@@ -10,9 +10,10 @@ import {
   ArrowUpDown, 
   Calendar 
 } from 'lucide-react';
-import { mockJobs, mockDepartments } from '@/data/mockData';
 import { Job } from '@/types';
 import { useAuth } from '@/context/AuthContext';
+import { useMasterData } from '@/context/MasterDataContext';
+import { jobApi } from '@/api/jobApi';
 
 interface JobListingPageProps {
   onSelectJob: (job: Job) => void;
@@ -28,6 +29,9 @@ export const JobListingPage: React.FC<JobListingPageProps> = ({
   initialDepartmentId
 }) => {
   const { savedJobIds, toggleSaveJob } = useAuth();
+  const { departments } = useMasterData();
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [keyword, setKeyword] = useState(initialKeyword);
   const [selectedDept, setSelectedDept] = useState<number | undefined>(initialDepartmentId);
   const [selectedLevel, setSelectedLevel] = useState<string>('ALL');
@@ -35,19 +39,41 @@ export const JobListingPage: React.FC<JobListingPageProps> = ({
   const [selectedLocation, setSelectedLocation] = useState<string>('ALL');
   const [sortBy, setSortBy] = useState<'NEWEST' | 'SALARY_DESC'>('NEWEST');
 
+  useEffect(() => {
+    let isMounted = true;
+    setLoading(true);
+    jobApi.getPublicJobs({ size: 100, sortBy: 'createdAt', direction: 'desc' })
+      .then(res => {
+        if (isMounted) {
+          setJobs(res?.content || []);
+        }
+      })
+      .catch(err => {
+        console.warn('Failed to load public jobs from API:', err);
+        if (isMounted) setJobs([]);
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+
+    return () => { isMounted = false; };
+  }, []);
+
+  const deptList = departments;
+
   const filteredJobs = useMemo(() => {
-    return mockJobs.filter(job => {
+    return jobs.filter(job => {
       if (job.status !== 'PUBLISHED') return false;
 
       if (keyword.trim()) {
         const kw = keyword.toLowerCase();
         const matchTitle = job.title.toLowerCase().includes(kw);
-        const matchDesc = job.description.toLowerCase().includes(kw);
-        const matchReq = job.requirements.toLowerCase().includes(kw);
+        const matchDesc = (job.description || '').toLowerCase().includes(kw);
+        const matchReq = (job.requirements || '').toLowerCase().includes(kw);
         if (!matchTitle && !matchDesc && !matchReq) return false;
       }
 
-      if (selectedDept && job.department.id !== selectedDept) return false;
+      if (selectedDept && job.department?.id !== selectedDept) return false;
       if (selectedLevel !== 'ALL' && job.jobLevel !== selectedLevel) return false;
       if (selectedType !== 'ALL' && job.employmentType !== selectedType) return false;
       if (selectedLocation !== 'ALL' && !job.location.includes(selectedLocation)) return false;
@@ -59,7 +85,7 @@ export const JobListingPage: React.FC<JobListingPageProps> = ({
       }
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
-  }, [keyword, selectedDept, selectedLevel, selectedType, selectedLocation, sortBy]);
+  }, [jobs, keyword, selectedDept, selectedLevel, selectedType, selectedLocation, sortBy]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
@@ -93,7 +119,7 @@ export const JobListingPage: React.FC<JobListingPageProps> = ({
               className="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             >
               <option value="">Tất cả phòng ban</option>
-              {mockDepartments.map(d => (
+              {deptList.map(d => (
                 <option key={d.id} value={d.id}>{d.name}</option>
               ))}
             </select>
@@ -147,10 +173,10 @@ export const JobListingPage: React.FC<JobListingPageProps> = ({
               !selectedDept ? 'bg-indigo-600 text-white font-medium' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
             }`}
           >
-            Tất cả ({mockJobs.filter(j => j.status === 'PUBLISHED').length})
+            Tất cả ({jobs.filter(j => j.status === 'PUBLISHED').length})
           </button>
-          {mockDepartments.map(dept => {
-            const count = mockJobs.filter(j => j.status === 'PUBLISHED' && j.department.id === dept.id).length;
+          {deptList.map(dept => {
+            const count = jobs.filter(j => j.status === 'PUBLISHED' && j.department?.id === dept.id).length;
             return (
               <button
                 key={dept.id}
@@ -188,7 +214,20 @@ export const JobListingPage: React.FC<JobListingPageProps> = ({
       </div>
 
       {/* Job Cards Grid */}
-      {filteredJobs.length === 0 ? (
+      {loading ? (
+        <div className="space-y-4">
+          {[1, 2, 3, 4].map(n => (
+            <div key={n} className="bg-white rounded-2xl border border-slate-200/80 p-6 animate-pulse space-y-3">
+              <div className="flex gap-2">
+                <div className="h-5 bg-slate-200 rounded-full w-24"></div>
+                <div className="h-5 bg-slate-200 rounded-full w-20"></div>
+              </div>
+              <div className="h-6 bg-slate-200 rounded w-1/2"></div>
+              <div className="h-4 bg-slate-100 rounded w-1/3"></div>
+            </div>
+          ))}
+        </div>
+      ) : filteredJobs.length === 0 ? (
         <div className="bg-white p-12 rounded-2xl border border-slate-200 text-center space-y-3">
           <Briefcase className="w-12 h-12 text-slate-300 mx-auto" />
           <h3 className="font-bold text-slate-800">Không tìm thấy vị trí tuyển dụng phù hợp</h3>
@@ -208,7 +247,7 @@ export const JobListingPage: React.FC<JobListingPageProps> = ({
                 <div className="space-y-3 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-[11px] font-semibold bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full">
-                      {job.department.name}
+                      {job.department?.name || 'Chung'}
                     </span>
                     <span className="text-[11px] font-medium bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full">
                       {job.jobLevel}
