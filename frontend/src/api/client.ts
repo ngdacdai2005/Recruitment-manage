@@ -3,7 +3,7 @@
  * Tích hợp tự động token JWT, chuẩn hóa định dạng request/response và xử lý lỗi
  */
 
-export const API_BASE_URL = '/api/v1';
+export const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
 export class ApiError extends Error {
   status: number;
