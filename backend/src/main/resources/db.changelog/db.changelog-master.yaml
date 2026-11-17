@@ -29,4 +29,6 @@ databaseChangeLog:
       file: db.changelog/changeset/14-insert-notifications.yaml
   - include:
       file: db.changelog/changeset/15-insert-audit-logs.yaml
+  - include:
+      file: db.changelog/changeset/16-add-token-fields-to-users.yaml
 

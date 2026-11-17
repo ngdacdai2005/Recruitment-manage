@@ -18,6 +18,7 @@ public class CustomUserDetails implements UserDetails {
     private final String fullName;
     private final Collection<? extends GrantedAuthority> authorities;
     private final boolean active;
+    private final Integer tokenVersion;
 
     public CustomUserDetails(User user) {
         this.id = user.getId();
@@ -26,6 +27,7 @@ public class CustomUserDetails implements UserDetails {
         this.fullName = user.getFullName();
         this.authorities = List.of(new SimpleGrantedAuthority(user.getRole().getName()));
         this.active = Boolean.TRUE.equals(user.getIsActive());
+        this.tokenVersion = user.getTokenVersion() != null ? user.getTokenVersion() : 0;
     }
 
     @Override

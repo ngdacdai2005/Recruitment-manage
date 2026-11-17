@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 16-add-token-and-reset-fields-to-users
+      author: dacdai
+      validCheckSum:
+        - "1:any"
+      changes:
+        - sql:
+            sql: |
+              ALTER TABLE users ADD COLUMN IF NOT EXISTS refresh_token_hash VARCHAR(255);
+              ALTER TABLE users ADD COLUMN IF NOT EXISTS token_version INT DEFAULT 0;
+              ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_password_token VARCHAR(255);
+              ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_password_expiry TIMESTAMP WITH TIME ZONE;

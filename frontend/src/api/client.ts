@@ -57,6 +57,7 @@ export async function request<T>(endpoint: string, options: RequestOptions = {})
   }
 
   const config: RequestInit = {
+    credentials: 'include',
     ...customConfig,
     headers: {
       'Accept': 'application/json',

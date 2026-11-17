@@ -47,6 +47,19 @@ public class User {
     @Column(nullable = false)
     private Boolean isActive = true;
 
+    @Column(name = "refresh_token_hash", length = 255)
+    private String refreshTokenHash;
+
+    @Builder.Default
+    @Column(name = "token_version", nullable = false)
+    private Integer tokenVersion = 0;
+
+    @Column(name = "reset_password_token", length = 255)
+    private String resetPasswordToken;
+
+    @Column(name = "reset_password_expiry")
+    private LocalDateTime resetPasswordExpiry;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;

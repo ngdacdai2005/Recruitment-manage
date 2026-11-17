@@ -15,8 +15,8 @@ export interface RegisterRequest {
 
 export interface AuthResponse {
   accessToken: string;
+  refreshToken?: string;
   tokenType: string;
-  expiresIn: number;
   userId: number;
   email: string;
   fullName: string;
@@ -46,12 +46,41 @@ export const authApi = {
     return res;
   },
 
+  refreshToken: async (): Promise<AuthResponse> => {
+    const res = await request<AuthResponse>('/auth/refresh', {
+      method: 'POST',
+    });
+    if (res.accessToken) {
+      setToken(res.accessToken);
+    }
+    return res;
+  },
+
+  logout: async (): Promise<void> => {
+    try {
+      await request<void>('/auth/logout', {
+        method: 'POST',
+      });
+    } finally {
+      removeToken();
+    }
+  },
+
+  forgotPassword: async (email: string): Promise<void> => {
+    return request<void>('/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    });
+  },
+
+  resetPassword: async (token: string, newPassword: string): Promise<void> => {
+    return request<void>('/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify({ token, newPassword }),
+    });
+  },
+
   getCurrentUser: async (): Promise<User> => {
     return request<User>('/auth/me');
   },
-
-  logout: () => {
-    removeToken();
-  },
 };
-
