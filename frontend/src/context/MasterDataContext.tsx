@@ -1,17 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Department, Position } from '../types';
-import { Branch } from '@/types/branch.types';
 import { departmentApi } from '../api/departmentApi';
 import { positionApi } from '../api/employeeApi';
-import { branchApi } from '@/api/branchApi';
 import { mockDepartments, mockPositions } from '../data/mockData';
-import { mockBranches } from '@/data/mockBranches';
 import { useAuth } from './AuthContext';
 
 interface MasterDataContextType {
   departments: Department[];
   positions: Position[];
-  branches: Branch[];
   isLoading: boolean;
   refreshMasterData: () => Promise<void>;
 }
@@ -22,22 +18,19 @@ export const MasterDataProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const { isBackendOnline, currentUser } = useAuth();
   const [departments, setDepartments] = useState<Department[]>(mockDepartments);
   const [positions, setPositions] = useState<Position[]>(mockPositions);
-  const [branches, setBranches] = useState<Branch[]>(mockBranches);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchMasterData = async () => {
     if (!isBackendOnline) return;
     setIsLoading(true);
     try {
-      const [deptRes, posRes, branchRes] = await Promise.all([
+      const [deptRes, posRes] = await Promise.all([
         departmentApi.getDepartments().catch(() => mockDepartments),
         positionApi.getAllPositions().catch(() => mockPositions),
-        branchApi.getBranches().catch(() => mockBranches),
       ]);
 
       if (deptRes && deptRes.length > 0) setDepartments(deptRes);
       if (posRes && posRes.length > 0) setPositions(posRes);
-      if (branchRes && branchRes.length > 0) setBranches(branchRes);
     } finally {
       setIsLoading(false);
     }
@@ -53,7 +46,6 @@ export const MasterDataProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       value={{
         departments,
         positions,
-        branches,
         isLoading,
         refreshMasterData: fetchMasterData,
       }}

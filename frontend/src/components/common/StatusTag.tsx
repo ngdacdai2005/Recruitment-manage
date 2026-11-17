@@ -44,20 +44,6 @@ export const StatusTag: React.FC<StatusTagProps> = ({ status, label, size = 'sm'
       case 0:
       case 'INACTIVE':
         return { text: 'Tạm khóa', bg: 'bg-slate-100 text-slate-600 border-slate-200', dot: 'bg-slate-400' };
-      case 'MAINTENANCE':
-        return { text: 'Bảo trì', bg: 'bg-amber-50 text-amber-700 border-amber-200', dot: 'bg-amber-500' };
-
-      // 4. Attendance
-      case 'ON_TIME':
-        return { text: 'Đúng giờ', bg: 'bg-emerald-50 text-emerald-700 border-emerald-200', dot: 'bg-emerald-500' };
-      case 'LATE':
-        return { text: 'Đi muộn', bg: 'bg-amber-50 text-amber-700 border-amber-200', dot: 'bg-amber-500' };
-      case 'EARLY_LEAVE':
-        return { text: 'Về sớm', bg: 'bg-orange-50 text-orange-700 border-orange-200', dot: 'bg-orange-500' };
-      case 'ABSENT':
-        return { text: 'Vắng mặt', bg: 'bg-rose-50 text-rose-700 border-rose-200', dot: 'bg-rose-500' };
-      case 'LEAVE_WITH_PAY':
-        return { text: 'Nghỉ phép', bg: 'bg-blue-50 text-blue-700 border-blue-200', dot: 'bg-blue-500' };
 
       default:
         return { text: String(val), bg: 'bg-slate-100 text-slate-700 border-slate-200', dot: 'bg-slate-400' };

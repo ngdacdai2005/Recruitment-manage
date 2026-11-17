@@ -6,8 +6,6 @@ import { JobsPage } from '../features/jobs/JobsPage';
 import { CandidatesPage } from '../features/candidates/CandidatesPage';
 import { InterviewsPage } from '../features/interviews/InterviewsPage';
 import { EmployeesPage } from '../features/employees/EmployeesPage';
-import { BranchesPage } from '../features/branches/BranchesPage';
-import { AttendancePage } from '../features/attendance/AttendancePage';
 import { DepartmentsPage } from '../features/departments/DepartmentsPage';
 import { ApplicationsPage } from '../features/applications/ApplicationsPage';
 import { UsersPage } from '../features/users/UsersPage';
@@ -89,28 +87,6 @@ export const adminRoutes: RouteObject[] = [
             moduleName="Quản trị Nhân sự (HRM)"
           >
             <EmployeesPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: 'branches',
-        element: (
-          <ProtectedRoute
-            allowedRoles={['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER']}
-            moduleName="Quản lý Chi nhánh"
-          >
-            <BranchesPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: 'attendance',
-        element: (
-          <ProtectedRoute
-            allowedRoles={['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER']}
-            moduleName="Quản lý Chấm công"
-          >
-            <AttendancePage />
           </ProtectedRoute>
         ),
       },

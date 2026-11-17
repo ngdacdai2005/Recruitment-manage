@@ -7,8 +7,6 @@ export type DomainResource =
   | 'CANDIDATES'
   | 'INTERVIEWS'
   | 'EMPLOYEES'
-  | 'ATTENDANCE'
-  | 'BRANCHES'
   | 'DEPARTMENTS'
   | 'USERS';
 
@@ -19,8 +17,6 @@ export const RBAC_MATRIX: Record<UserRole, Partial<Record<DomainResource, Permis
     CANDIDATES: ['VIEW', 'CREATE', 'EDIT', 'DELETE', 'EXPORT'],
     INTERVIEWS: ['VIEW', 'CREATE', 'EDIT', 'DELETE', 'EVALUATE', 'EXPORT'],
     EMPLOYEES: ['VIEW', 'CREATE', 'EDIT', 'DELETE', 'EXPORT'],
-    ATTENDANCE: ['VIEW', 'CREATE', 'EDIT', 'DELETE', 'EXPORT'],
-    BRANCHES: ['VIEW', 'CREATE', 'EDIT', 'DELETE', 'EXPORT'],
     DEPARTMENTS: ['VIEW', 'CREATE', 'EDIT', 'DELETE', 'EXPORT'],
     USERS: ['VIEW', 'CREATE', 'EDIT', 'DELETE', 'EXPORT'],
   },
@@ -30,8 +26,6 @@ export const RBAC_MATRIX: Record<UserRole, Partial<Record<DomainResource, Permis
     CANDIDATES: ['VIEW', 'CREATE', 'EDIT', 'DELETE', 'EXPORT'],
     INTERVIEWS: ['VIEW', 'CREATE', 'EDIT', 'DELETE', 'EVALUATE', 'EXPORT'],
     EMPLOYEES: ['VIEW', 'CREATE', 'EDIT', 'DELETE', 'EXPORT'],
-    ATTENDANCE: ['VIEW', 'CREATE', 'EDIT', 'EXPORT'],
-    BRANCHES: ['VIEW', 'CREATE', 'EDIT', 'EXPORT'],
     DEPARTMENTS: ['VIEW', 'CREATE', 'EDIT', 'EXPORT'],
     USERS: ['VIEW'],
   },
@@ -41,8 +35,6 @@ export const RBAC_MATRIX: Record<UserRole, Partial<Record<DomainResource, Permis
     CANDIDATES: ['VIEW', 'CREATE', 'EDIT', 'EXPORT'],
     INTERVIEWS: ['VIEW', 'CREATE', 'EDIT', 'EVALUATE'],
     EMPLOYEES: ['VIEW'],
-    ATTENDANCE: ['VIEW'],
-    BRANCHES: ['VIEW'],
     DEPARTMENTS: ['VIEW'],
   },
   ROLE_INTERVIEWER: {

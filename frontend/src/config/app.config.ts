@@ -38,8 +38,7 @@ export const appConfig = {
       interviews: '/admin/interviews',
       employees: '/admin/employees',
       departments: '/admin/departments',
-      branches: '/admin/branches',
-      attendance: '/admin/attendance',
+      users: '/admin/users',
     },
   },
 } as const;

@@ -6,7 +6,6 @@ import {
   ChevronDown, 
   ExternalLink,
   Bell,
-  Building,
   LogOut,
   User as UserIcon
 } from 'lucide-react';
@@ -18,7 +17,6 @@ export const AdminTopbar: React.FC = () => {
   const { currentUser, currentRole, loginAs, logout, isBackendOnline, checkConnection } = useAuth();
   const [showRoleMenu, setShowRoleMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [selectedBranch, setSelectedBranch] = useState('Trụ sở chính Hà Nội');
   const navigate = useNavigate();
 
   const rolesList: { role: UserRole; label: string; desc: string }[] = [
@@ -62,23 +60,8 @@ export const AdminTopbar: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. Topbar Utilities: Branch Selector, Health, Fast Role Switcher, Profile */}
+      {/* 2. Topbar Utilities: Health, Fast Role Switcher, Profile */}
       <div className="flex items-center gap-3">
-        {/* Branch Selector Dropdown */}
-        <div className="hidden md:flex items-center gap-1.5 bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700 text-slate-300">
-          <Building className="w-3.5 h-3.5 text-indigo-400" />
-          <select
-            value={selectedBranch}
-            onChange={(e) => setSelectedBranch(e.target.value)}
-            className="bg-transparent text-slate-200 text-xs focus:outline-none cursor-pointer"
-          >
-            <option value="Trụ sở chính Hà Nội" className="bg-slate-800 text-white">Trụ sở Keangnam Hà Nội</option>
-            <option value="Chi nhánh TP. HCM" className="bg-slate-800 text-white">Chi nhánh Bitexco TP. HCM</option>
-            <option value="Trung tâm R&D Đà Nẵng" className="bg-slate-800 text-white">Trung tâm R&D Đà Nẵng</option>
-            <option value="Văn phòng Cần Thơ" className="bg-slate-800 text-white">Văn phòng Cần Thơ</option>
-          </select>
-        </div>
-
         {/* Backend Connection Health Badge */}
         <button
           onClick={() => checkConnection()}
