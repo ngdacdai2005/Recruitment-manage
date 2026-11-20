@@ -15,8 +15,12 @@ export const RoleGuard: React.FC<RoleGuardProps> = ({
   allowedRoles,
   redirectPath = appConfig.routes.public.home,
 }) => {
-  const { currentRole } = useAuth();
+  const { currentRole, isLoading } = useAuth();
   const location = useLocation();
+
+  if (isLoading) {
+    return null;
+  }
 
   if (!currentRole || !allowedRoles.includes(currentRole)) {
     if (currentRole === 'ROLE_CANDIDATE') {

@@ -60,7 +60,7 @@ export const CandidateInterviewsPage: React.FC<CandidateInterviewsPageProps> = (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-600">
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-indigo-600" />
-                    <span>Thời gian: <strong>{inv.scheduledAt.replace('T', ' lúc ')}</strong></span>
+                    <span>Thời gian: <strong>{inv.scheduledAt ? inv.scheduledAt.replace('T', ' lúc ') : 'Chưa xếp lịch'}</strong></span>
                   </div>
                   <div className="flex items-center gap-2">
                     <User className="w-4 h-4 text-indigo-600" />

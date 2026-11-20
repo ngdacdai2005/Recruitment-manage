@@ -30,7 +30,7 @@ export const ApplicationTrackingPage: React.FC<ApplicationTrackingPageProps> = (
       id: 'APPLIED',
       title: 'Đã tiếp nhận hồ sơ',
       desc: 'Hồ sơ ứng tuyển đã được tiếp nhận an toàn vào hệ thống tuyển dụng.',
-      date: application.createdAt.split(' ')[0]
+      date: application.createdAt ? application.createdAt.split(' ')[0] : 'Vừa xong'
     },
     {
       id: 'SCREENING',

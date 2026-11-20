@@ -297,7 +297,9 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
                 <div className="hidden sm:block text-left">
                   <div className="text-xs font-bold text-slate-800 leading-none">{currentUser.fullName}</div>
                   <div className="text-[10px] text-slate-500 mt-1 uppercase tracking-wider font-semibold">
-                    {currentUser.role.replace('ROLE_', '').replace('_', ' ')}
+                    {typeof currentUser.role === 'string'
+                      ? currentUser.role.replace('ROLE_', '').replace(/_/g, ' ')
+                      : (currentUser.role as any)?.name?.replace('ROLE_', '').replace(/_/g, ' ') || 'USER'}
                   </div>
                 </div>
               </div>

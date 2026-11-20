@@ -112,38 +112,38 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
         <div className="grid grid-cols-2 sm:grid-cols-6 gap-3">
           <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 text-center space-y-1">
             <div className="text-xs text-slate-500 font-semibold">1. Nộp hồ sơ</div>
-            <div className="text-xl font-black text-slate-900">{stats.statusBreakdown.APPLIED}</div>
+            <div className="text-xl font-black text-slate-900">{stats.statusBreakdown?.APPLIED || 0}</div>
             <div className="text-[10px] text-slate-400">100% phễu vào</div>
           </div>
 
           <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 text-center space-y-1">
             <div className="text-xs text-slate-500 font-semibold">2. Sàng lọc CV</div>
-            <div className="text-xl font-black text-indigo-600">{stats.statusBreakdown.SCREENING}</div>
+            <div className="text-xl font-black text-indigo-600">{stats.statusBreakdown?.SCREENING || 0}</div>
             <div className="text-[10px] text-indigo-500 font-semibold">75% qua vòng</div>
           </div>
 
           <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 text-center space-y-1">
             <div className="text-xs text-slate-500 font-semibold">3. Phỏng vấn</div>
-            <div className="text-xl font-black text-amber-600">{stats.statusBreakdown.INTERVIEW}</div>
+            <div className="text-xl font-black text-amber-600">{stats.statusBreakdown?.INTERVIEW || 0}</div>
             <div className="text-[10px] text-amber-500 font-semibold">50% tiếp tục</div>
           </div>
 
           <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 text-center space-y-1">
             <div className="text-xs text-slate-500 font-semibold">4. Bài test / Test</div>
-            <div className="text-xl font-black text-sky-600">{stats.statusBreakdown.ASSESSMENT}</div>
+            <div className="text-xl font-black text-sky-600">{stats.statusBreakdown?.ASSESSMENT || 0}</div>
             <div className="text-[10px] text-sky-500 font-semibold">30% đạt tiêu chuẩn</div>
           </div>
 
           <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 text-center space-y-1">
             <div className="text-xs text-slate-500 font-semibold">5. Gửi Offer</div>
-            <div className="text-xl font-black text-purple-600">{stats.statusBreakdown.OFFER}</div>
+            <div className="text-xl font-black text-purple-600">{stats.statusBreakdown?.OFFER || 0}</div>
             <div className="text-[10px] text-purple-500 font-semibold">15% đề nghị</div>
           </div>
 
           <div className="bg-emerald-50 p-4 rounded-2xl border border-emerald-200 text-center space-y-1">
             <div className="text-xs text-emerald-800 font-bold">6. Trúng tuyển</div>
-            <div className="text-xl font-black text-emerald-600">{stats.statusBreakdown.HIRED}</div>
-            <div className="text-[10px] text-emerald-700 font-bold">{stats.conversionRate}% chuyển đổi</div>
+            <div className="text-xl font-black text-emerald-600">{stats.statusBreakdown?.HIRED || 0}</div>
+            <div className="text-[10px] text-emerald-700 font-bold">{stats.conversionRate || 0}% chuyển đổi</div>
           </div>
         </div>
       </div>
@@ -161,12 +161,17 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
         </div>
 
         <div className="divide-y divide-slate-100">
-          {recentApplications.map(app => (
+          {recentApplications.length === 0 ? (
+            <div className="py-8 text-center text-xs text-slate-400">
+              Chưa có hồ sơ ứng viên nào nộp gần đây.
+            </div>
+          ) : (
+            recentApplications.map(app => (
             <div key={app.id} className="py-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div>
-                <div className="font-bold text-xs text-slate-900">{app.candidate.fullName}</div>
+                <div className="font-bold text-xs text-slate-900">{app.candidate?.fullName || 'Ứng viên'}</div>
                 <div className="text-[11px] text-slate-500 mt-0.5">
-                  Ứng tuyển vị trí: <span className="font-semibold text-slate-700">{app.job.title}</span> • {app.createdAt}
+                  Ứng tuyển vị trí: <span className="font-semibold text-slate-700">{app.job?.title || 'Vị trí tuyển dụng'}</span> • {app.createdAt || 'Gần đây'}
                 </div>
               </div>
 
@@ -189,7 +194,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                 </button>
               </div>
             </div>
-          ))}
+          )))}
         </div>
       </div>
     </div>

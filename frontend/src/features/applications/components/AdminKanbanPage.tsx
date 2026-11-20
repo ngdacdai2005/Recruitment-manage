@@ -16,16 +16,17 @@ import {
   HelpCircle 
 } from 'lucide-react';
 import { Application, ApplicationStatus, Job } from '@/types';
-import { mockJobs } from '@/data/mockData';
 import { useAuth } from '@/context/AuthContext';
 
 interface AdminKanbanPageProps {
   applications: Application[];
+  jobs?: Job[];
   onUpdateStatus: (appId: number, toStatus: ApplicationStatus, reason?: string) => void;
 }
 
 export const AdminKanbanPage: React.FC<AdminKanbanPageProps> = ({
   applications,
+  jobs = [],
   onUpdateStatus
 }) => {
   const { currentUser } = useAuth();
@@ -48,7 +49,7 @@ export const AdminKanbanPage: React.FC<AdminKanbanPageProps> = ({
   ];
 
   const filteredApps = applications.filter(app => {
-    if (selectedJobId !== 'ALL' && app.job.id !== selectedJobId) return false;
+    if (selectedJobId !== 'ALL' && app.job?.id !== selectedJobId) return false;
     return true;
   });
 
@@ -114,7 +115,7 @@ export const AdminKanbanPage: React.FC<AdminKanbanPageProps> = ({
             className="bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2 font-medium focus:outline-none"
           >
             <option value="ALL">Tất cả vị trí tuyển dụng ({applications.length} hồ sơ)</option>
-            {mockJobs.map(j => (
+            {(jobs.length > 0 ? jobs : Array.from(new Map(applications.filter(a => a?.job).map(a => [a.job.id, a.job])).values())).map(j => (
               <option key={j.id} value={j.id}>{j.title}</option>
             ))}
           </select>
@@ -166,19 +167,19 @@ export const AdminKanbanPage: React.FC<AdminKanbanPageProps> = ({
                     >
                       <div>
                         <div className="flex items-start justify-between gap-1">
-                          <h4 className="font-bold text-xs text-slate-900 line-clamp-1">{app.candidate.fullName}</h4>
+                          <h4 className="font-bold text-xs text-slate-900 line-clamp-1">{app.candidate?.fullName || 'Ứng viên'}</h4>
                           <span className="text-[9px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded uppercase font-semibold">
-                            {app.job.department.code}
+                            {app.job?.department?.code || 'IT'}
                           </span>
                         </div>
-                        <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">{app.candidate.headline}</p>
+                        <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">{app.candidate?.headline || app.candidate?.email || ''}</p>
                       </div>
 
                       <div className="p-2 bg-slate-50 rounded-lg text-[11px] space-y-1 text-slate-600">
-                        <div className="line-clamp-1 font-medium text-slate-800">{app.job.title}</div>
+                        <div className="line-clamp-1 font-medium text-slate-800">{app.job?.title || 'Vị trí tuyển dụng'}</div>
                         <div className="flex items-center justify-between text-[10px] text-slate-400">
                           <span>Lương: {(app.expectedSalary || 0)/1000000}tr</span>
-                          <span>{app.createdAt.split(' ')[0]}</span>
+                          <span>{app.createdAt ? app.createdAt.split(' ')[0] : 'Gần đây'}</span>
                         </div>
                       </div>
 

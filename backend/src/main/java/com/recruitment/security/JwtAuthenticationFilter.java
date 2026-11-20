@@ -53,9 +53,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String email = jwtTokenService.getEmailFromToken(jwt);
                 CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService.loadUserByUsername(email);
 
-                // 2. Kiểm tra token_version (Đã bị revoke toàn bộ phiên khi đổi pass hoặc reset pass)
+                // 2. Kiểm tra token_version (nếu cả 2 bên đều có thông tin version)
                 Integer tokenVersionInToken = jwtTokenService.getTokenVersionFromToken(jwt);
-                if (!tokenVersionInToken.equals(userDetails.getTokenVersion())) {
+                if (tokenVersionInToken != null && userDetails.getTokenVersion() != null
+                        && !tokenVersionInToken.equals(userDetails.getTokenVersion())) {
                     log.warn("Token version của token [{}] không khớp với DB [{}] cho User [{}]",
                             tokenVersionInToken, userDetails.getTokenVersion(), email);
                     filterChain.doFilter(request, response);

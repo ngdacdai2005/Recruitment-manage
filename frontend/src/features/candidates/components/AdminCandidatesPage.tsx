@@ -25,9 +25,9 @@ export const AdminCandidatesPage: React.FC<AdminCandidatesPageProps> = ({ applic
     if (!keyword.trim()) return true;
     const kw = keyword.toLowerCase();
     return (
-      app.candidate.fullName.toLowerCase().includes(kw) ||
-      app.candidate.email.toLowerCase().includes(kw) ||
-      app.job.title.toLowerCase().includes(kw)
+      (app.candidate?.fullName || '').toLowerCase().includes(kw) ||
+      (app.candidate?.email || '').toLowerCase().includes(kw) ||
+      (app.job?.title || '').toLowerCase().includes(kw)
     );
   });
 
@@ -69,19 +69,27 @@ export const AdminCandidatesPage: React.FC<AdminCandidatesPageProps> = ({ applic
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-slate-700">
-              {filtered.map(app => (
+              {filtered.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="py-12 text-center text-slate-400">
+                    <p className="font-semibold text-sm">Chưa có hồ sơ ứng viên nào trong hệ thống</p>
+                    <p className="text-[11px] text-slate-400 mt-1">Khi ứng viên nộp hồ sơ, dữ liệu sẽ tự động hiển thị tại đây.</p>
+                  </td>
+                </tr>
+              ) : (
+                filtered.map(app => (
                 <tr key={app.id} className="hover:bg-slate-50/70 transition-colors">
                   <td className="py-3.5 px-4">
-                    <div className="font-bold text-slate-900">{app.candidate.fullName}</div>
-                    <div className="text-[11px] text-slate-400">{app.candidate.headline}</div>
+                    <div className="font-bold text-slate-900">{app.candidate?.fullName || 'Ứng viên'}</div>
+                    <div className="text-[11px] text-slate-400">{app.candidate?.headline || ''}</div>
                   </td>
                   <td className="py-3.5 px-4">
-                    <span className="font-semibold text-slate-800">{app.job.title}</span>
-                    <div className="text-[10px] text-slate-400">{app.job.department.name}</div>
+                    <span className="font-semibold text-slate-800">{app.job?.title || 'Vị trí tuyển dụng'}</span>
+                    <div className="text-[10px] text-slate-400">{app.job?.department?.name || ''}</div>
                   </td>
                   <td className="py-3.5 px-4 text-slate-600 space-y-0.5">
-                    <div className="flex items-center gap-1.5"><Mail className="w-3 h-3 text-slate-400" /> {app.candidate.email}</div>
-                    <div className="flex items-center gap-1.5"><Phone className="w-3 h-3 text-slate-400" /> {app.candidate.phone || '0945678901'}</div>
+                    <div className="flex items-center gap-1.5"><Mail className="w-3 h-3 text-slate-400" /> {app.candidate?.email || ''}</div>
+                    <div className="flex items-center gap-1.5"><Phone className="w-3 h-3 text-slate-400" /> {app.candidate?.phone || ''}</div>
                   </td>
                   <td className="py-3.5 px-4">
                     <a
@@ -114,7 +122,7 @@ export const AdminCandidatesPage: React.FC<AdminCandidatesPageProps> = ({ applic
                     </button>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>

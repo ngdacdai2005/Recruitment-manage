@@ -24,7 +24,16 @@ export const APP_MODULES: AppModule[] = [
     icon: 'LayoutDashboard',
     group: 'ATS',
     groupLabel: 'Quản trị Tuyển dụng (ATS)',
-    allowedRoles: ['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER', 'ROLE_INTERVIEWER'],
+    allowedRoles: [
+      'ROLE_SUPER_ADMIN',
+      'ROLE_HR_MANAGER',
+      'ROLE_RECRUITER',
+      'ROLE_INTERVIEWER',
+      'ROLE_DEPARTMENT_HEAD',
+      'ROLE_TALENT_SOURCER',
+      'ROLE_HR_ASSISTANT',
+      'ROLE_SYSTEM_AUDITOR',
+    ],
   },
   {
     key: 'pipeline',
@@ -34,7 +43,7 @@ export const APP_MODULES: AppModule[] = [
     icon: 'Kanban',
     group: 'ATS',
     groupLabel: 'Quản trị Tuyển dụng (ATS)',
-    allowedRoles: ['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER'],
+    allowedRoles: ['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER', 'ROLE_TALENT_SOURCER'],
     badge: 'Real-time',
   },
   {
@@ -45,7 +54,7 @@ export const APP_MODULES: AppModule[] = [
     icon: 'Briefcase',
     group: 'ATS',
     groupLabel: 'Quản trị Tuyển dụng (ATS)',
-    allowedRoles: ['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER'],
+    allowedRoles: ['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER', 'ROLE_DEPARTMENT_HEAD', 'ROLE_TALENT_SOURCER'],
   },
   {
     key: 'candidates',
@@ -55,7 +64,15 @@ export const APP_MODULES: AppModule[] = [
     icon: 'UserCheck',
     group: 'ATS',
     groupLabel: 'Quản trị Tuyển dụng (ATS)',
-    allowedRoles: ['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER', 'ROLE_INTERVIEWER'],
+    allowedRoles: [
+      'ROLE_SUPER_ADMIN',
+      'ROLE_HR_MANAGER',
+      'ROLE_RECRUITER',
+      'ROLE_INTERVIEWER',
+      'ROLE_DEPARTMENT_HEAD',
+      'ROLE_TALENT_SOURCER',
+      'ROLE_HR_ASSISTANT',
+    ],
   },
   {
     key: 'interviews',
@@ -65,7 +82,14 @@ export const APP_MODULES: AppModule[] = [
     icon: 'Calendar',
     group: 'ATS',
     groupLabel: 'Quản trị Tuyển dụng (ATS)',
-    allowedRoles: ['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER', 'ROLE_INTERVIEWER'],
+    allowedRoles: [
+      'ROLE_SUPER_ADMIN',
+      'ROLE_HR_MANAGER',
+      'ROLE_RECRUITER',
+      'ROLE_INTERVIEWER',
+      'ROLE_DEPARTMENT_HEAD',
+      'ROLE_HR_ASSISTANT',
+    ],
   },
 
   // ==========================================
@@ -79,7 +103,7 @@ export const APP_MODULES: AppModule[] = [
     icon: 'Users',
     group: 'HRM',
     groupLabel: 'Quản trị Nhân sự (HRM)',
-    allowedRoles: ['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER'],
+    allowedRoles: ['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER'],
     badge: 'Core',
   },
   {
@@ -90,7 +114,7 @@ export const APP_MODULES: AppModule[] = [
     icon: 'Building2',
     group: 'HRM',
     groupLabel: 'Quản trị Nhân sự (HRM)',
-    allowedRoles: ['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER'],
+    allowedRoles: ['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_DEPARTMENT_HEAD'],
   },
 
   // ==========================================

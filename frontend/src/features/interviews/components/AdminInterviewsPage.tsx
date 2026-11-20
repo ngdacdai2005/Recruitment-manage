@@ -4,7 +4,7 @@ import {
   Plus, 
   Video, 
   Clock, 
-  User, 
+  User as UserIcon, 
   CheckCircle2, 
   XCircle, 
   Award, 
@@ -12,12 +12,12 @@ import {
   ExternalLink, 
   FileCheck 
 } from 'lucide-react';
-import { Interview, InterviewEvaluation, Application } from '@/types';
-import { mockUsers } from '@/data/mockData';
+import { Interview, InterviewEvaluation, Application, User } from '@/types';
 
 interface AdminInterviewsPageProps {
   interviews: Interview[];
   applications: Application[];
+  interviewers?: User[];
   onAddInterview: (newInv: Interview) => void;
   onSaveEvaluation: (interviewId: number, evaluation: InterviewEvaluation) => void;
 }
@@ -25,6 +25,7 @@ interface AdminInterviewsPageProps {
 export const AdminInterviewsPage: React.FC<AdminInterviewsPageProps> = ({
   interviews,
   applications,
+  interviewers = [],
   onAddInterview,
   onSaveEvaluation
 }) => {
@@ -51,14 +52,14 @@ export const AdminInterviewsPage: React.FC<AdminInterviewsPageProps> = ({
   const handleCreateInterview = (e: React.FormEvent) => {
     e.preventDefault();
     const app = applications.find(a => a.id === selectedAppId);
-    const interviewer = mockUsers.find(u => u.id === interviewerId) || mockUsers[3];
+    const interviewer = interviewers.find(u => u.id === interviewerId);
 
     const newInv: Interview = {
       id: Date.now(),
       applicationId: selectedAppId,
       candidateName: app?.candidate.fullName || 'Ứng viên',
       jobTitle: app?.job.title || 'Vị trí tuyển dụng',
-      interviewerName: interviewer.fullName,
+      interviewerName: interviewer?.fullName || 'Người phỏng vấn',
       scheduledAt,
       durationMinutes: duration,
       interviewType,
@@ -128,35 +129,42 @@ export const AdminInterviewsPage: React.FC<AdminInterviewsPageProps> = ({
 
       {/* Interviews List */}
       <div className="space-y-4">
-        {interviews.map(inv => (
-          <div
-            key={inv.id}
-            className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hover:border-indigo-200 transition-colors"
-          >
-            <div className="space-y-2 flex-1">
-              <div className="flex items-center gap-2">
-                <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full ${
-                  inv.status === 'COMPLETED' ? 'bg-emerald-100 text-emerald-800' :
-                  inv.status === 'CANCELLED' ? 'bg-rose-100 text-rose-800' :
-                  'bg-indigo-100 text-indigo-800'
-                }`}>
-                  {inv.status}
-                </span>
-                <span className="text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
-                  {inv.interviewType} • {inv.durationMinutes} phút
-                </span>
-              </div>
+        {interviews.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-400 shadow-sm">
+            <Calendar className="w-10 h-10 mx-auto text-slate-300 mb-3" />
+            <p className="font-semibold text-sm text-slate-700">Chưa có lịch phỏng vấn nào</p>
+            <p className="text-[11px] text-slate-400 mt-1">Bấm "Tạo lịch phỏng vấn mới" ở góc trên để lên lịch với ứng viên.</p>
+          </div>
+        ) : (
+          interviews.map(inv => (
+            <div
+              key={inv.id}
+              className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hover:border-indigo-200 transition-colors"
+            >
+              <div className="space-y-2 flex-1">
+                <div className="flex items-center gap-2">
+                  <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full ${
+                    inv.status === 'COMPLETED' ? 'bg-emerald-100 text-emerald-800' :
+                    inv.status === 'CANCELLED' ? 'bg-rose-100 text-rose-800' :
+                    'bg-indigo-100 text-indigo-800'
+                  }`}>
+                    {inv.status}
+                  </span>
+                  <span className="text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
+                    {inv.interviewType} • {inv.durationMinutes} phút
+                  </span>
+                </div>
 
-              <div className="flex items-center gap-2">
-                <h3 className="font-extrabold text-base text-slate-900">{inv.candidateName}</h3>
-                <span className="text-slate-400">/</span>
-                <span className="text-xs font-semibold text-slate-600">{inv.jobTitle}</span>
-              </div>
+                <div className="flex items-center gap-2">
+                  <h3 className="font-extrabold text-base text-slate-900">{inv.candidateName}</h3>
+                  <span className="text-slate-400">/</span>
+                  <span className="text-xs font-semibold text-slate-600">{inv.jobTitle}</span>
+                </div>
 
-              <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500">
-                <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-indigo-600" /> {inv.scheduledAt.replace('T', ' lúc ')}</span>
-                <span className="flex items-center gap-1.5"><User className="w-3.5 h-3.5 text-indigo-600" /> Interviewer: {inv.interviewerName}</span>
-              </div>
+                <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500">
+                  <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-indigo-600" /> {inv.scheduledAt ? String(inv.scheduledAt).replace('T', ' lúc ') : 'Chưa xếp lịch'}</span>
+                  <span className="flex items-center gap-1.5"><UserIcon className="w-3.5 h-3.5 text-indigo-600" /> Interviewer: {inv.interviewerName}</span>
+                </div>
 
               {inv.evaluation && (
                 <div className="p-3 bg-emerald-50/70 border border-emerald-200 rounded-xl text-xs text-emerald-900 space-y-1">
@@ -193,7 +201,7 @@ export const AdminInterviewsPage: React.FC<AdminInterviewsPageProps> = ({
               </button>
             </div>
           </div>
-        ))}
+        )))}
       </div>
 
       {/* Schedule Interview Modal */}
@@ -231,9 +239,12 @@ export const AdminInterviewsPage: React.FC<AdminInterviewsPageProps> = ({
                     onChange={(e) => setInterviewerId(Number(e.target.value))}
                     className="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:outline-none"
                   >
-                    {mockUsers.filter(u => u.role !== 'ROLE_CANDIDATE').map(u => (
-                      <option key={u.id} value={u.id}>{u.fullName} ({u.role.replace('ROLE_', '')})</option>
-                    ))}
+                    {interviewers.map(u => {
+                      const roleStr = typeof (u as any).role === 'object' ? (u as any).role?.name : String(u.role || '');
+                      return (
+                        <option key={u.id} value={u.id}>{u.fullName} ({roleStr.replace('ROLE_', '')})</option>
+                      );
+                    })}
                   </select>
                 </div>
 

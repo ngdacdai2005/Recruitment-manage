@@ -37,7 +37,7 @@ public class InterviewController {
     }
 
     @GetMapping("/admin/interviews")
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER', 'ROLE_INTERVIEWER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER', 'ROLE_INTERVIEWER', 'ROLE_DEPARTMENT_HEAD')")
     @Operation(summary = "Xem danh sách lịch phỏng vấn (Admin/HR/Interviewer)")
     public ResponseEntity<ApiResponse<List<Interview>>> getAdminInterviews(
             @RequestParam(required = false) Long interviewerId
@@ -46,7 +46,7 @@ public class InterviewController {
     }
 
     @GetMapping("/candidate/interviews")
-    @PreAuthorize("hasAuthority('ROLE_CANDIDATE')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CANDIDATE', 'ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER')")
     @Operation(summary = "Ứng viên xem lịch phỏng vấn của mình")
     public ResponseEntity<ApiResponse<List<Interview>>> getCandidateInterviews(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.ok(ApiResponse.ok(interviewService.getCandidateInterviews(userDetails.getId())));

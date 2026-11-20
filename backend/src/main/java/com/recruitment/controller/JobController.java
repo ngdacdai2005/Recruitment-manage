@@ -54,7 +54,7 @@ public class JobController {
     }
 
     @GetMapping("/admin/list")
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER', 'ROLE_INTERVIEWER', 'ROLE_DEPARTMENT_HEAD', 'ROLE_TALENT_SOURCER')")
     @Operation(summary = "Quản lý danh sách toàn bộ tin tuyển dụng (Admin/HR)")
     public ResponseEntity<ApiResponse<PageResponse<Job>>> getAdminJobs(
             @RequestParam(required = false) String keyword,

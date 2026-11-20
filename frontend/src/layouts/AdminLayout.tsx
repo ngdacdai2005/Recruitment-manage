@@ -23,6 +23,10 @@ export const AdminLayout: React.FC = () => {
       case 'ROLE_HR_MANAGER': return 'HR Manager';
       case 'ROLE_RECRUITER': return 'Recruiter';
       case 'ROLE_INTERVIEWER': return 'Tech Interviewer';
+      case 'ROLE_DEPARTMENT_HEAD': return 'Trưởng bộ phận';
+      case 'ROLE_TALENT_SOURCER': return 'Talent Sourcer';
+      case 'ROLE_HR_ASSISTANT': return 'Trợ lý HR';
+      case 'ROLE_SYSTEM_AUDITOR': return 'Kiểm toán hệ thống';
       default: return role || 'Admin ATS';
     }
   };

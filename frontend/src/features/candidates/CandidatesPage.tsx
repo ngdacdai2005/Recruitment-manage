@@ -1,30 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import './CandidatesPage.css';
 import { AdminCandidatesPage } from './components/AdminCandidatesPage';
-import { mockApplications } from '@/data/mockData';
 import { Application } from '@/types';
-import { useAuth } from '@/context/AuthContext';
 import { applicationApi } from '@/api';
 
 export const CandidatesPage: React.FC = () => {
-  const { isBackendOnline } = useAuth();
-  const [applications, setApplications] = useState<Application[]>(mockApplications);
+  const [applications, setApplications] = useState<Application[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (isBackendOnline) {
-      applicationApi.getAdminApplications({ size: 100 })
-        .then(res => {
-          if (res && res.content && res.content.length > 0) {
-            setApplications(res.content);
-          }
-        })
-        .catch(err => console.warn('Could not load candidates:', err));
-    }
-  }, [isBackendOnline]);
+    let isMounted = true;
+    setLoading(true);
+    applicationApi.getAdminApplications({ size: 100 })
+      .then(res => {
+        if (!isMounted) return;
+        setApplications(res?.content || []);
+      })
+      .catch(err => {
+        console.warn('Could not load candidates:', err);
+        if (!isMounted) return;
+        setApplications([]);
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+
+    return () => { isMounted = false; };
+  }, []);
 
   return (
     <div className="candidates-page-container">
-      <AdminCandidatesPage applications={applications} />
+      {loading ? (
+        <div className="min-h-[500px] flex flex-col items-center justify-center space-y-3">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
+          <p className="text-xs text-slate-500 font-medium">Đang tải danh sách hồ sơ ứng viên...</p>
+        </div>
+      ) : (
+        <AdminCandidatesPage applications={applications} />
+      )}
     </div>
   );
 };

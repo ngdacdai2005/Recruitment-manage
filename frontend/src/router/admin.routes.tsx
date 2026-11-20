@@ -21,6 +21,10 @@ export const adminRoutes: RouteObject[] = [
           'ROLE_HR_MANAGER',
           'ROLE_RECRUITER',
           'ROLE_INTERVIEWER',
+          'ROLE_DEPARTMENT_HEAD',
+          'ROLE_TALENT_SOURCER',
+          'ROLE_HR_ASSISTANT',
+          'ROLE_SYSTEM_AUDITOR',
         ]}
       >
         <AdminLayout />
@@ -39,7 +43,7 @@ export const adminRoutes: RouteObject[] = [
         path: 'pipeline',
         element: (
           <ProtectedRoute
-            allowedRoles={['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER']}
+            allowedRoles={['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER', 'ROLE_TALENT_SOURCER']}
             moduleName="Kanban Pipeline"
           >
             <ApplicationsPage />
@@ -50,7 +54,7 @@ export const adminRoutes: RouteObject[] = [
         path: 'jobs',
         element: (
           <ProtectedRoute
-            allowedRoles={['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER']}
+            allowedRoles={['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER', 'ROLE_DEPARTMENT_HEAD', 'ROLE_TALENT_SOURCER']}
             moduleName="Tin tuyển dụng"
           >
             <JobsPage />
@@ -61,7 +65,15 @@ export const adminRoutes: RouteObject[] = [
         path: 'candidates',
         element: (
           <ProtectedRoute
-            allowedRoles={['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER', 'ROLE_INTERVIEWER']}
+            allowedRoles={[
+              'ROLE_SUPER_ADMIN',
+              'ROLE_HR_MANAGER',
+              'ROLE_RECRUITER',
+              'ROLE_INTERVIEWER',
+              'ROLE_DEPARTMENT_HEAD',
+              'ROLE_TALENT_SOURCER',
+              'ROLE_HR_ASSISTANT',
+            ]}
             moduleName="Kho ứng viên"
           >
             <CandidatesPage />
@@ -72,7 +84,14 @@ export const adminRoutes: RouteObject[] = [
         path: 'interviews',
         element: (
           <ProtectedRoute
-            allowedRoles={['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER', 'ROLE_INTERVIEWER']}
+            allowedRoles={[
+              'ROLE_SUPER_ADMIN',
+              'ROLE_HR_MANAGER',
+              'ROLE_RECRUITER',
+              'ROLE_INTERVIEWER',
+              'ROLE_DEPARTMENT_HEAD',
+              'ROLE_HR_ASSISTANT',
+            ]}
             moduleName="Lịch phỏng vấn"
           >
             <InterviewsPage />
@@ -83,7 +102,7 @@ export const adminRoutes: RouteObject[] = [
         path: 'employees',
         element: (
           <ProtectedRoute
-            allowedRoles={['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER']}
+            allowedRoles={['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER']}
             moduleName="Quản trị Nhân sự (HRM)"
           >
             <EmployeesPage />
@@ -94,7 +113,7 @@ export const adminRoutes: RouteObject[] = [
         path: 'departments',
         element: (
           <ProtectedRoute
-            allowedRoles={['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER']}
+            allowedRoles={['ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_DEPARTMENT_HEAD']}
             moduleName="Cơ cấu Phòng ban"
           >
             <DepartmentsPage />

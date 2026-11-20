@@ -74,7 +74,7 @@ public class CandidateController {
     }
 
     @GetMapping("/admin/candidates")
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER', 'ROLE_INTERVIEWER', 'ROLE_DEPARTMENT_HEAD', 'ROLE_TALENT_SOURCER')")
     @Operation(summary = "Xem danh sách hồ sơ ứng viên (Admin/HR)")
     public ResponseEntity<ApiResponse<PageResponse<Candidate>>> getAllCandidates(
             @RequestParam(defaultValue = "0") int page,

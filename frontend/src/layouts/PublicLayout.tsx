@@ -92,7 +92,10 @@ export const PublicLayout: React.FC<{ onApplyClick?: (job: any) => void }> = ({ 
                   <div className="hidden lg:block text-left text-xs">
                     <p className="font-semibold text-slate-800 leading-tight">{currentUser.fullName}</p>
                     <p className="text-[10px] text-slate-500 capitalize">
-                      {currentUser.role === 'ROLE_CANDIDATE' ? 'Ứng viên' : currentUser.role.replace('ROLE_', '').replace('_', ' ')}
+                      {(() => {
+                        const r = typeof currentUser.role === 'string' ? currentUser.role : (currentUser.role as any)?.name;
+                        return r === 'ROLE_CANDIDATE' ? 'Ứng viên' : (r || 'USER').replace('ROLE_', '').replace(/_/g, ' ');
+                      })()}
                     </p>
                   </div>
                   <button

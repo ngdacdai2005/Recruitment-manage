@@ -56,8 +56,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/jobs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/departments/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/positions/**").permitAll()
-                        .requestMatchers("/admin/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_HR_MANAGER", "ROLE_RECRUITER", "ROLE_INTERVIEWER")
-                        .requestMatchers("/candidate/**").hasAuthority("ROLE_CANDIDATE")
+                        .requestMatchers("/admin/**", "/jobs/admin/**").hasAnyAuthority(
+                                "ROLE_SUPER_ADMIN", "ROLE_HR_MANAGER", "ROLE_RECRUITER",
+                                "ROLE_INTERVIEWER", "ROLE_DEPARTMENT_HEAD", "ROLE_TALENT_SOURCER",
+                                "ROLE_HR_ASSISTANT", "ROLE_SYSTEM_AUDITOR"
+                        )
+                        .requestMatchers("/candidate/**").hasAnyAuthority("ROLE_CANDIDATE", "ROLE_SUPER_ADMIN", "ROLE_HR_MANAGER")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())

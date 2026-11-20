@@ -32,7 +32,7 @@ public class ReportController {
     private final InterviewRepository interviewRepository;
 
     @GetMapping("/dashboard")
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER', 'ROLE_INTERVIEWER', 'ROLE_DEPARTMENT_HEAD', 'ROLE_TALENT_SOURCER', 'ROLE_HR_ASSISTANT', 'ROLE_SYSTEM_AUDITOR')")
     @Operation(summary = "Lấy dữ liệu thống kê tổng quan cho Admin Dashboard")
     public ResponseEntity<ApiResponse<DashboardStatsResponse>> getDashboardOverview() {
         long publishedJobs = jobRepository.countByStatus(JobStatus.PUBLISHED);

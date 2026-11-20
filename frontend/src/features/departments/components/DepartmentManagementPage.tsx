@@ -1,26 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { Department } from '@/types';
-import { mockDepartments } from '@/data/mockData';
-import { useAuth } from '@/context/AuthContext';
 import { departmentApi } from '@/api';
 import { Building2, Plus, Users, Search } from 'lucide-react';
 import { Table, Column } from '@/components/ui/Table';
 import { Button } from '@/components/ui/Button';
 
 export const DepartmentManagementPage: React.FC = () => {
-  const { isBackendOnline } = useAuth();
-  const [departments, setDepartments] = useState<Department[]>(mockDepartments);
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [keyword, setKeyword] = useState('');
 
   useEffect(() => {
-    if (isBackendOnline) {
-      departmentApi.getDepartments()
-        .then(res => {
-          if (res && res.length > 0) setDepartments(res);
-        })
-        .catch(err => console.warn('Could not load departments:', err));
-    }
-  }, [isBackendOnline]);
+    let isMounted = true;
+    setLoading(true);
+    departmentApi.getDepartments()
+      .then(res => {
+        if (!isMounted) return;
+        setDepartments(res || []);
+      })
+      .catch(err => {
+        console.warn('Could not load departments:', err);
+        if (isMounted) setDepartments([]);
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+
+    return () => { isMounted = false; };
+  }, []);
 
   const filtered = departments.filter(d =>
     d.name.toLowerCase().includes(keyword.toLowerCase()) ||

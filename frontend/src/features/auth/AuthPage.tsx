@@ -3,12 +3,25 @@ import './AuthPage.css';
 import { Briefcase, ArrowLeft, UserPlus, LogIn } from 'lucide-react';
 import { LoginForm } from './components/LoginForm';
 import { RegisterForm } from './components/RegisterForm';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
 
 export const AuthPage: React.FC = () => {
+  const { currentUser, isLoading } = useAuth();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialMode = searchParams.get('mode') === 'register' ? 'register' : 'login';
   const [mode, setMode] = useState<'login' | 'register'>(initialMode);
+
+  useEffect(() => {
+    if (!isLoading && currentUser) {
+      if (currentUser.role === 'ROLE_CANDIDATE') {
+        navigate('/candidate/dashboard', { replace: true });
+      } else {
+        navigate('/admin/dashboard', { replace: true });
+      }
+    }
+  }, [currentUser, isLoading, navigate]);
 
   useEffect(() => {
     const urlMode = searchParams.get('mode');

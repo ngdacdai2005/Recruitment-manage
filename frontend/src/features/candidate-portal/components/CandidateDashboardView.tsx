@@ -183,7 +183,7 @@ export const CandidateDashboard: React.FC<CandidateDashboardProps> = ({
                   <div key={inv.id} className="p-4 bg-indigo-50/60 rounded-xl border border-indigo-100 space-y-2">
                     <div className="flex items-center justify-between text-[11px] font-bold text-indigo-800">
                       <span>{inv.interviewType} (60 phút)</span>
-                      <span>{inv.scheduledAt.replace('T', ' ')}</span>
+                      <span>{inv.scheduledAt ? inv.scheduledAt.replace('T', ' ') : 'Chưa xếp lịch'}</span>
                     </div>
                     <div className="font-bold text-xs text-slate-900">{inv.jobTitle}</div>
                     <div className="text-xs text-slate-600">Interviewer: {inv.interviewerName}</div>

@@ -9,7 +9,12 @@ export type UserRole =
   | 'ROLE_HR_MANAGER'
   | 'ROLE_RECRUITER'
   | 'ROLE_INTERVIEWER'
-  | 'ROLE_CANDIDATE';
+  | 'ROLE_CANDIDATE'
+  | 'ROLE_DEPARTMENT_HEAD'
+  | 'ROLE_TALENT_SOURCER'
+  | 'ROLE_HR_ASSISTANT'
+  | 'ROLE_SYSTEM_AUDITOR'
+  | 'ROLE_GUEST';
 
 export interface PaginationParams {
   page?: number;

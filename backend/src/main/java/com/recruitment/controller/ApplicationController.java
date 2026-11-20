@@ -56,7 +56,7 @@ public class ApplicationController {
     }
 
     @GetMapping("/candidate/applications/{id}/tracking")
-    @PreAuthorize("hasAuthority('ROLE_CANDIDATE')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CANDIDATE', 'ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER')")
     @Operation(summary = "Xem dòng thời gian tiến độ hồ sơ (Timeline Tracking)")
     public ResponseEntity<ApiResponse<List<ApplicationHistory>>> getApplicationTracking(
             @PathVariable Long id
@@ -67,7 +67,7 @@ public class ApplicationController {
     // --- ADMIN / HR PORTAL APIS ---
 
     @GetMapping("/admin/applications")
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER', 'ROLE_INTERVIEWER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_HR_MANAGER', 'ROLE_RECRUITER', 'ROLE_INTERVIEWER', 'ROLE_DEPARTMENT_HEAD', 'ROLE_TALENT_SOURCER')")
     @Operation(summary = "Quản lý danh sách ứng viên theo vị trí & lọc trạng thái Pipeline (Kanban Board)")
     public ResponseEntity<ApiResponse<PageResponse<Application>>> getAdminApplications(
             @RequestParam(required = false) Long jobId,

@@ -7,22 +7,22 @@ databaseChangeLog:
             splitStatements: true
             endDelimiter: ";"
             sql: |
-              -- Password for all accounts: "password123" (BCrypt hashed: $2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK)
+              -- Password for all accounts: "password123" (BCrypt hashed: $2a$10$spjgiH4KOL.cgXfL0EmC7u3NUFNk.iBfqVZ45ReRXEmepSgVzJ92W)
               INSERT INTO users (id, email, password_hash, full_name, phone, role_id, is_active) VALUES
-              (1, 'admin@recruitment.com', '$2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK', 'Nguyễn Quản Trị (Super Admin)', '0901234567', 1, TRUE),
-              (2, 'hr.manager@recruitment.com', '$2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK', 'Trần Thị Thu Hà (HR Manager)', '0912345678', 2, TRUE),
-              (3, 'recruiter@recruitment.com', '$2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK', 'Lê Tuyển Dụng (Recruiter)', '0923456789', 3, TRUE),
-              (4, 'techlead@recruitment.com', '$2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK', 'Phạm Công Nghệ (Tech Lead)', '0934567890', 4, TRUE),
-              (5, 'candidate@example.com', '$2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK', 'Đỗ Văn Ứng Viên', '0945678901', 5, TRUE),
-              (6, 'candidate2@example.com', '$2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK', 'Hoàng Thị Thùy Linh', '0956789012', 5, TRUE),
-              (7, 'candidate3@example.com', '$2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK', 'Vũ Minh Tuấn', '0967890123', 5, TRUE),
-              (8, 'candidate4@example.com', '$2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK', 'Ngô Bích Phương', '0978901234', 5, TRUE),
-              (9, 'sourcer@recruitment.com', '$2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK', 'Bùi Quang Huy (Talent Sourcer)', '0989012345', 7, TRUE),
-              (10, 'head.it@recruitment.com', '$2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK', 'Đinh Trọng Hưng (Head of IT)', '0990123456', 6, TRUE),
-              (11, 'haidang.ai@gmail.com', '$2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK', 'Nguyễn Hải Đăng', '0911223344', 5, TRUE),
-              (12, 'maianh.po@gmail.com', '$2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK', 'Lê Mai Anh', '0922334455', 5, TRUE),
-              (13, 'quocbao.sales@gmail.com', '$2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK', 'Trần Quốc Bảo', '0933445566', 5, TRUE),
-              (14, 'thutrang.hr@gmail.com', '$2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK', 'Phạm Thị Thu Trang', '0944556677', 5, TRUE),
-              (15, 'hoangnam.design@gmail.com', '$2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK', 'Đặng Hoàng Nam', '0955667788', 5, TRUE),
-              (16, 'vanthanh.fullstack@gmail.com', '$2a$10$eAccYoNOHEqgkVE8aGY2Te3Lz6i0pWbLcD8f1sVf11GqX/9sXg6vK', 'Phan Văn Thành', '0966778899', 5, TRUE)
+              (1, 'admin@recruitment.com', '$2a$10$spjgiH4KOL.cgXfL0EmC7u3NUFNk.iBfqVZ45ReRXEmepSgVzJ92W', 'Nguyễn Quản Trị (Super Admin)', '0901234567', 1, TRUE),
+              (2, 'hr.manager@recruitment.com', '$2a$10$spjgiH4KOL.cgXfL0EmC7u3NUFNk.iBfqVZ45ReRXEmepSgVzJ92W', 'Trần Thị Thu Hà (HR Manager)', '0912345678', 2, TRUE),
+              (3, 'recruiter@recruitment.com', '$2a$10$spjgiH4KOL.cgXfL0EmC7u3NUFNk.iBfqVZ45ReRXEmepSgVzJ92W', 'Lê Tuyển Dụng (Recruiter)', '0923456789', 3, TRUE),
+              (4, 'techlead@recruitment.com', '$2a$10$spjgiH4KOL.cgXfL0EmC7u3NUFNk.iBfqVZ45ReRXEmepSgVzJ92W', 'Phạm Công Nghệ (Tech Lead)', '0934567890', 4, TRUE),
+              (5, 'candidate@example.com', '$2a$10$spjgiH4KOL.cgXfL0EmC7u3NUFNk.iBfqVZ45ReRXEmepSgVzJ92W', 'Đỗ Văn Ứng Viên', '0945678901', 5, TRUE),
+              (6, 'candidate2@example.com', '$2a$10$spjgiH4KOL.cgXfL0EmC7u3NUFNk.iBfqVZ45ReRXEmepSgVzJ92W', 'Hoàng Thị Thùy Linh', '0956789012', 5, TRUE),
+              (7, 'candidate3@example.com', '$2a$10$spjgiH4KOL.cgXfL0EmC7u3NUFNk.iBfqVZ45ReRXEmepSgVzJ92W', 'Vũ Minh Tuấn', '0967890123', 5, TRUE),
+              (8, 'candidate4@example.com', '$2a$10$spjgiH4KOL.cgXfL0EmC7u3NUFNk.iBfqVZ45ReRXEmepSgVzJ92W', 'Ngô Bích Phương', '0978901234', 5, TRUE),
+              (9, 'sourcer@recruitment.com', '$2a$10$spjgiH4KOL.cgXfL0EmC7u3NUFNk.iBfqVZ45ReRXEmepSgVzJ92W', 'Bùi Quang Huy (Talent Sourcer)', '0989012345', 7, TRUE),
+              (10, 'head.it@recruitment.com', '$2a$10$spjgiH4KOL.cgXfL0EmC7u3NUFNk.iBfqVZ45ReRXEmepSgVzJ92W', 'Đinh Trọng Hưng (Head of IT)', '0990123456', 6, TRUE),
+              (11, 'haidang.ai@gmail.com', '$2a$10$spjgiH4KOL.cgXfL0EmC7u3NUFNk.iBfqVZ45ReRXEmepSgVzJ92W', 'Nguyễn Hải Đăng', '0911223344', 5, TRUE),
+              (12, 'maianh.po@gmail.com', '$2a$10$spjgiH4KOL.cgXfL0EmC7u3NUFNk.iBfqVZ45ReRXEmepSgVzJ92W', 'Lê Mai Anh', '0922334455', 5, TRUE),
+              (13, 'quocbao.sales@gmail.com', '$2a$10$spjgiH4KOL.cgXfL0EmC7u3NUFNk.iBfqVZ45ReRXEmepSgVzJ92W', 'Trần Quốc Bảo', '0933445566', 5, TRUE),
+              (14, 'thutrang.hr@gmail.com', '$2a$10$spjgiH4KOL.cgXfL0EmC7u3NUFNk.iBfqVZ45ReRXEmepSgVzJ92W', 'Phạm Thị Thu Trang', '0944556677', 5, TRUE),
+              (15, 'hoangnam.design@gmail.com', '$2a$10$spjgiH4KOL.cgXfL0EmC7u3NUFNk.iBfqVZ45ReRXEmepSgVzJ92W', 'Đặng Hoàng Nam', '0955667788', 5, TRUE),
+              (16, 'vanthanh.fullstack@gmail.com', '$2a$10$spjgiH4KOL.cgXfL0EmC7u3NUFNk.iBfqVZ45ReRXEmepSgVzJ92W', 'Phan Văn Thành', '0966778899', 5, TRUE)
               ON CONFLICT (id) DO NOTHING;

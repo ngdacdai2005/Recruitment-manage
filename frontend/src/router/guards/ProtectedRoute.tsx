@@ -15,8 +15,18 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   allowedRoles,
   moduleName,
 }) => {
-  const { currentUser, currentRole } = useAuth();
+  const { currentUser, currentRole, isLoading } = useAuth();
   const location = useLocation();
+
+  // Tầng 0: Chờ hoàn tất khôi phục phiên xác thực từ Token
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 space-y-3">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
+        <p className="text-xs text-slate-500 font-medium">Đang xác thực phiên làm việc...</p>
+      </div>
+    );
+  }
 
   // Tầng 1: Kiểm tra đăng nhập (Authentication)
   if (!currentUser) {

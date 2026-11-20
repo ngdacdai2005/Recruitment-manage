@@ -47,6 +47,38 @@ export const RBAC_MATRIX: Record<UserRole, Partial<Record<DomainResource, Permis
     JOBS: ['VIEW'],
     APPLICATIONS: ['VIEW', 'CREATE'],
   },
+  ROLE_DEPARTMENT_HEAD: {
+    JOBS: ['VIEW', 'CREATE', 'EDIT'],
+    APPLICATIONS: ['VIEW'],
+    CANDIDATES: ['VIEW'],
+    INTERVIEWS: ['VIEW', 'EVALUATE'],
+    DEPARTMENTS: ['VIEW'],
+  },
+  ROLE_TALENT_SOURCER: {
+    JOBS: ['VIEW'],
+    APPLICATIONS: ['VIEW', 'CREATE'],
+    CANDIDATES: ['VIEW', 'CREATE', 'EDIT'],
+    INTERVIEWS: ['VIEW'],
+  },
+  ROLE_HR_ASSISTANT: {
+    JOBS: ['VIEW'],
+    APPLICATIONS: ['VIEW'],
+    CANDIDATES: ['VIEW'],
+    INTERVIEWS: ['VIEW', 'CREATE', 'EDIT'],
+    EMPLOYEES: ['VIEW'],
+  },
+  ROLE_SYSTEM_AUDITOR: {
+    JOBS: ['VIEW'],
+    APPLICATIONS: ['VIEW'],
+    CANDIDATES: ['VIEW'],
+    INTERVIEWS: ['VIEW'],
+    EMPLOYEES: ['VIEW'],
+    DEPARTMENTS: ['VIEW'],
+    USERS: ['VIEW'],
+  },
+  ROLE_GUEST: {
+    JOBS: ['VIEW'],
+  },
 };
 
 export const hasPermission = (

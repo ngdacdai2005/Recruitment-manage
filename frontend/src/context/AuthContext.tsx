@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, UserRole } from '../types';
-import { mockUsers } from '../data/mockData';
 import { authApi, checkBackendHealth, savedJobApi, getToken, removeToken, RegisterRequest } from '../api';
 
 interface AuthContextType {
@@ -8,6 +7,7 @@ interface AuthContextType {
   currentRole: UserRole | null;
   activePortal: 'PUBLIC' | 'CANDIDATE' | 'ADMIN';
   isBackendOnline: boolean;
+  isLoading: boolean;
   setActivePortal: (portal: 'PUBLIC' | 'CANDIDATE' | 'ADMIN') => void;
   loginAs: (role: UserRole) => Promise<void> | void;
   login: (email: string, pass: string) => Promise<User | null>;
@@ -25,6 +25,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [activePortal, setActivePortal] = useState<'PUBLIC' | 'CANDIDATE' | 'ADMIN'>('PUBLIC');
   const [savedJobIds, setSavedJobIds] = useState<number[]>([]);
   const [isBackendOnline, setIsBackendOnline] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const checkConnection = async (): Promise<boolean> => {
     const isOnline = await checkBackendHealth();
@@ -51,6 +52,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setCurrentUser(null);
         }
       }
+      setIsLoading(false);
     };
     initSession();
 
@@ -84,54 +86,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const targetEmail = roleEmailMap[role] || 'admin@recruitment.com';
 
     // Đăng nhập thật vào Backend để lấy JWT Token chính danh
-    if (isBackendOnline) {
-      try {
-        const res = await authApi.login({ email: targetEmail, password: 'password123' });
-        if (res && res.accessToken) {
-          const user: User = {
-            id: res.userId,
-            email: res.email,
-            fullName: res.fullName,
-            role: res.role as UserRole,
-          };
-          setCurrentUser(user);
-          setActivePortal(role === 'ROLE_CANDIDATE' ? 'CANDIDATE' : 'ADMIN');
-          return;
-        }
-      } catch (err) {
-        console.warn('Real backend loginAs failed, using local user fallback:', err);
-      }
+    const res = await authApi.login({ email: targetEmail, password: 'password123' });
+    if (res && res.accessToken) {
+      const user: User = {
+        id: res.userId,
+        email: res.email,
+        fullName: res.fullName,
+        role: res.role as UserRole,
+      };
+      setCurrentUser(user);
+      setActivePortal(role === 'ROLE_CANDIDATE' ? 'CANDIDATE' : 'ADMIN');
     }
-
-    // Fallback if offline
-    const user = mockUsers.find(u => u.role === role) || mockUsers[0];
-    setCurrentUser(user);
-    setActivePortal(role === 'ROLE_CANDIDATE' ? 'CANDIDATE' : 'ADMIN');
   };
 
   const login = async (email: string, pass: string): Promise<User | null> => {
-    if (isBackendOnline) {
-      try {
-        const res = await authApi.login({ email, password: pass });
-        if (res && res.accessToken) {
-          const user: User = {
-            id: res.userId,
-            email: res.email,
-            fullName: res.fullName,
-            role: res.role as UserRole,
-          };
-          setCurrentUser(user);
-          setActivePortal(user.role === 'ROLE_CANDIDATE' ? 'CANDIDATE' : 'ADMIN');
-          return user;
-        }
-      } catch (err) {
-        console.warn('Backend login error:', err);
-      }
-    }
-
-    // Fallback to mock accounts if offline
-    const user = mockUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
-    if (user) {
+    const res = await authApi.login({ email, password: pass });
+    if (res && res.accessToken) {
+      const user: User = {
+        id: res.userId,
+        email: res.email,
+        fullName: res.fullName,
+        role: res.role as UserRole,
+      };
       setCurrentUser(user);
       setActivePortal(user.role === 'ROLE_CANDIDATE' ? 'CANDIDATE' : 'ADMIN');
       return user;
@@ -140,31 +116,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const register = async (data: RegisterRequest): Promise<User> => {
-    if (isBackendOnline) {
-      const res = await authApi.register(data);
-      if (res && res.accessToken) {
-        const user: User = {
-          id: res.userId,
-          email: res.email,
-          fullName: res.fullName,
-          role: res.role as UserRole,
-        };
-        setCurrentUser(user);
-        setActivePortal('CANDIDATE');
-        return user;
-      }
+    const res = await authApi.register(data);
+    if (res && res.accessToken) {
+      const user: User = {
+        id: res.userId,
+        email: res.email,
+        fullName: res.fullName,
+        role: res.role as UserRole,
+      };
+      setCurrentUser(user);
+      setActivePortal('CANDIDATE');
+      return user;
     }
-
-    // Fallback to mock account if offline
-    const newUser: User = {
-      id: Date.now(),
-      email: data.email,
-      fullName: data.fullName,
-      role: 'ROLE_CANDIDATE',
-    };
-    setCurrentUser(newUser);
-    setActivePortal('CANDIDATE');
-    return newUser;
+    throw new Error('Đăng ký không thành công');
   };
 
   const logout = () => {
@@ -204,6 +168,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       currentRole: currentUser?.role || null,
       activePortal,
       isBackendOnline,
+      isLoading,
       setActivePortal,
       loginAs,
       login,

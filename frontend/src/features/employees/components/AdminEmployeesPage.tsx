@@ -24,7 +24,6 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { Employee, Position, Department, Gender, ContractType } from '@/types';
-import { mockEmployees, mockPositions, mockDepartments } from '@/data/mockData';
 import { useAuth } from '@/context/AuthContext';
 import { employeeApi, positionApi, departmentApi } from '@/api';
 
@@ -32,9 +31,9 @@ export const AdminEmployeesPage: React.FC = () => {
   const { currentRole, isBackendOnline } = useAuth();
 
   // Data states
-  const [employees, setEmployees] = useState<Employee[]>(mockEmployees);
-  const [positions, setPositions] = useState<Position[]>(mockPositions);
-  const [departments, setDepartments] = useState<Department[]>(mockDepartments);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [positions, setPositions] = useState<Position[]>([]);
+  const [departments, setDepartments] = useState<Department[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [feedbackMsg, setFeedbackMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
@@ -101,14 +100,20 @@ export const AdminEmployeesPage: React.FC = () => {
         })
       ]);
 
-      if (empRes && empRes.content && empRes.content.length > 0) {
+      if (empRes && empRes.content) {
         setEmployees(empRes.content);
+      } else {
+        setEmployees([]);
       }
-      if (posRes && posRes.length > 0) {
+      if (posRes && Array.isArray(posRes)) {
         setPositions(posRes);
+      } else {
+        setPositions([]);
       }
-      if (deptRes && deptRes.length > 0) {
+      if (deptRes && Array.isArray(deptRes)) {
         setDepartments(deptRes);
+      } else {
+        setDepartments([]);
       }
     } finally {
       setLoading(false);

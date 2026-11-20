@@ -15,37 +15,52 @@ import {
   Eye 
 } from 'lucide-react';
 import { Job, JobStatus, Department } from '@/types';
-import { mockJobs, mockDepartments } from '@/data/mockData';
 import { useAuth } from '@/context/AuthContext';
 import { jobApi, departmentApi } from '@/api';
 
 export const AdminJobsPage: React.FC = () => {
   const { currentRole, isBackendOnline } = useAuth();
-  const [jobs, setJobs] = useState<Job[]>(mockJobs);
-  const [departments, setDepartments] = useState<Department[]>(mockDepartments);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [keyword, setKeyword] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [deptFilter, setDeptFilter] = useState<string>('ALL');
 
   useEffect(() => {
-    if (isBackendOnline) {
-      jobApi.getAdminJobs()
-        .then(res => {
-          if (res && res.content && res.content.length > 0) {
-            setJobs(res.content);
-          }
-        })
-        .catch(err => console.warn('Could not fetch admin jobs:', err));
+    let isMounted = true;
+    setLoading(true);
 
-      departmentApi.getDepartments()
-        .then(res => {
-          if (res && res.length > 0) {
-            setDepartments(res);
-          }
-        })
-        .catch(err => console.warn('Could not fetch departments:', err));
-    }
-  }, [isBackendOnline]);
+    Promise.all([
+      jobApi.getAdminJobs().catch(err => {
+        console.warn('Could not fetch admin jobs:', err);
+        return null;
+      }),
+      departmentApi.getDepartments().catch(err => {
+        console.warn('Could not fetch departments:', err);
+        return null;
+      })
+    ]).then(([jobsRes, deptsRes]) => {
+      if (!isMounted) return;
+      if (jobsRes && jobsRes.content) {
+        setJobs(jobsRes.content);
+      } else {
+        setJobs([]);
+      }
+      if (deptsRes && Array.isArray(deptsRes)) {
+        setDepartments(deptsRes);
+        if (deptsRes.length > 0) {
+          setNewDeptId(deptsRes[0].id);
+        }
+      } else {
+        setDepartments([]);
+      }
+    }).finally(() => {
+      if (isMounted) setLoading(false);
+    });
+
+    return () => { isMounted = false; };
+  }, []);
   
   // Create Job Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -64,7 +79,7 @@ export const AdminJobsPage: React.FC = () => {
 
   const filteredJobs = jobs.filter(j => {
     if (statusFilter !== 'ALL' && j.status !== statusFilter) return false;
-    if (deptFilter !== 'ALL' && j.department.id.toString() !== deptFilter) return false;
+    if (deptFilter !== 'ALL' && j.department?.id?.toString() !== deptFilter) return false;
     if (keyword.trim() && !j.title.toLowerCase().includes(keyword.toLowerCase())) return false;
     return true;
   });
@@ -189,7 +204,7 @@ export const AdminJobsPage: React.FC = () => {
             className="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-xl px-3 py-2 focus:outline-none"
           >
             <option value="ALL">Tất cả phòng ban</option>
-            {mockDepartments.map(d => (
+            {departments.map(d => (
               <option key={d.id} value={d.id.toString()}>{d.code} - {d.name}</option>
             ))}
           </select>
@@ -212,14 +227,22 @@ export const AdminJobsPage: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-slate-700">
-              {filteredJobs.map(job => (
+              {filteredJobs.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-12 text-center text-slate-400">
+                    <p className="font-semibold text-sm">Chưa có tin tuyển dụng nào</p>
+                    <p className="text-[11px] text-slate-400 mt-1">Bấm "Tạo tin tuyển dụng" ở góc trên để tạo mới.</p>
+                  </td>
+                </tr>
+              ) : (
+                filteredJobs.map(job => (
                 <tr key={job.id} className="hover:bg-slate-50/70 transition-colors">
                   <td className="py-3.5 px-4">
                     <div className="font-bold text-slate-900">{job.title}</div>
                     <div className="text-[11px] text-slate-400">SL: {job.quantity} người • Tạo: {job.createdAt}</div>
                   </td>
                   <td className="py-3.5 px-4 font-semibold text-slate-800">
-                    {job.department.name}
+                    {job.department?.name || 'Chưa phân bổ'}
                   </td>
                   <td className="py-3.5 px-4">
                     <span className="font-medium text-slate-800">{job.jobLevel}</span>
@@ -260,7 +283,7 @@ export const AdminJobsPage: React.FC = () => {
                     )}
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>
@@ -301,7 +324,7 @@ export const AdminJobsPage: React.FC = () => {
                     onChange={(e) => setNewDeptId(Number(e.target.value))}
                     className="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl focus:outline-none"
                   >
-                    {mockDepartments.map(d => (
+                    {departments.map(d => (
                       <option key={d.id} value={d.id}>{d.name}</option>
                     ))}
                   </select>
