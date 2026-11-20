@@ -35,4 +35,6 @@ databaseChangeLog:
       file: db.changelog/changeset/17-create-positions-and-employees.yaml
   - include:
       file: db.changelog/changeset/18-alter-employee-status-and-gender-to-integer.yaml
+  - include:
+      file: db.changelog/changeset/19-sync-all-sequences.yaml
 

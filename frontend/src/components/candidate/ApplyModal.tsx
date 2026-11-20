@@ -9,7 +9,8 @@ import {
   DollarSign, 
   Calendar, 
   Send,
-  LogIn
+  LogIn,
+  UserPlus
 } from 'lucide-react';
 import { Job, Application } from '../../types';
 import { useAuth } from '../../context/AuthContext';
@@ -162,22 +163,35 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
         ) : (
           <form onSubmit={handleSubmit} className="p-6 space-y-5">
             {!currentUser && (
-              <div className="p-4 bg-indigo-50 border border-indigo-200 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-indigo-900">
+              <div className="p-4 bg-indigo-50 border border-indigo-200 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs text-indigo-900">
                 <div className="flex items-center gap-2">
                   <AlertCircle className="w-5 h-5 text-indigo-600 shrink-0" />
-                  <span>Vui lòng đăng nhập với tài khoản Ứng viên để gửi hồ sơ và theo dõi tiến trình tuyển dụng.</span>
+                  <span>Vui lòng đăng nhập hoặc tạo tài khoản Ứng viên để nộp hồ sơ và theo dõi kết quả phỏng vấn.</span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    onClose();
-                    navigate('/auth');
-                  }}
-                  className="px-3.5 py-1.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shrink-0 flex items-center justify-center gap-1.5"
-                >
-                  <LogIn className="w-3.5 h-3.5" />
-                  <span>Đăng nhập ngay</span>
-                </button>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      navigate('/auth?mode=register');
+                    }}
+                    className="px-3 py-1.5 bg-white border border-indigo-300 text-indigo-700 rounded-xl font-bold hover:bg-indigo-50 shrink-0 flex items-center justify-center gap-1.5"
+                  >
+                    <UserPlus className="w-3.5 h-3.5" />
+                    <span>Đăng ký mới</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      navigate('/auth?mode=login');
+                    }}
+                    className="px-3.5 py-1.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shrink-0 flex items-center justify-center gap-1.5"
+                  >
+                    <LogIn className="w-3.5 h-3.5" />
+                    <span>Đăng nhập</span>
+                  </button>
+                </div>
               </div>
             )}
 

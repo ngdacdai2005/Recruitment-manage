@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, UserRole } from '../types';
 import { mockUsers } from '../data/mockData';
-import { authApi, checkBackendHealth, savedJobApi, getToken, removeToken } from '../api';
+import { authApi, checkBackendHealth, savedJobApi, getToken, removeToken, RegisterRequest } from '../api';
 
 interface AuthContextType {
   currentUser: User | null;
@@ -11,6 +11,7 @@ interface AuthContextType {
   setActivePortal: (portal: 'PUBLIC' | 'CANDIDATE' | 'ADMIN') => void;
   loginAs: (role: UserRole) => Promise<void> | void;
   login: (email: string, pass: string) => Promise<User | null>;
+  register: (data: RegisterRequest) => Promise<User>;
   logout: () => void;
   savedJobIds: number[];
   toggleSaveJob: (jobId: number) => Promise<void>;
@@ -138,6 +139,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return null;
   };
 
+  const register = async (data: RegisterRequest): Promise<User> => {
+    if (isBackendOnline) {
+      const res = await authApi.register(data);
+      if (res && res.accessToken) {
+        const user: User = {
+          id: res.userId,
+          email: res.email,
+          fullName: res.fullName,
+          role: res.role as UserRole,
+        };
+        setCurrentUser(user);
+        setActivePortal('CANDIDATE');
+        return user;
+      }
+    }
+
+    // Fallback to mock account if offline
+    const newUser: User = {
+      id: Date.now(),
+      email: data.email,
+      fullName: data.fullName,
+      role: 'ROLE_CANDIDATE',
+    };
+    setCurrentUser(newUser);
+    setActivePortal('CANDIDATE');
+    return newUser;
+  };
+
   const logout = () => {
     authApi.logout().catch(() => {});
     removeToken();
@@ -178,6 +207,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setActivePortal,
       loginAs,
       login,
+      register,
       logout,
       savedJobIds,
       toggleSaveJob,

@@ -6,7 +6,11 @@ import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { appConfig } from '@/config/app.config';
 
-export const LoginForm: React.FC = () => {
+interface LoginFormProps {
+  onSwitchToRegister?: () => void;
+}
+
+export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -72,6 +76,19 @@ export const LoginForm: React.FC = () => {
         {loading ? 'Đang xác thực...' : 'Đăng nhập'}
         <ArrowRight className="w-4 h-4 ml-2" />
       </Button>
+
+      {onSwitchToRegister && (
+        <p className="text-center text-xs text-slate-500 pt-1">
+          Chưa có tài khoản ứng viên?{' '}
+          <button
+            type="button"
+            onClick={onSwitchToRegister}
+            className="font-bold text-indigo-600 hover:text-indigo-800 transition-colors"
+          >
+            Đăng ký ngay
+          </button>
+        </p>
+      )}
     </form>
   );
 };

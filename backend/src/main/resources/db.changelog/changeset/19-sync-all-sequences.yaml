@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 19-sync-all-database-sequences
+      author: dacdai
+      validCheckSum:
+        - "1:any"
+      changes:
+        - sql:
+            splitStatements: true
+            endDelimiter: ";"
+            sql: |
+              SELECT setval('candidates_id_seq', COALESCE((SELECT MAX(id) FROM candidates), 1));
+              SELECT setval('users_id_seq', COALESCE((SELECT MAX(id) FROM users), 1));
+              SELECT setval('jobs_id_seq', COALESCE((SELECT MAX(id) FROM jobs), 1));
+              SELECT setval('departments_id_seq', COALESCE((SELECT MAX(id) FROM departments), 1));
+              SELECT setval('applications_id_seq', COALESCE((SELECT MAX(id) FROM applications), 1));
+              SELECT setval('interviews_id_seq', COALESCE((SELECT MAX(id) FROM interviews), 1));
+              SELECT setval('saved_jobs_id_seq', COALESCE((SELECT MAX(id) FROM saved_jobs), 1));
+              SELECT setval('roles_id_seq', COALESCE((SELECT MAX(id) FROM roles), 1));
+              SELECT setval('positions_id_seq', COALESCE((SELECT MAX(id) FROM positions), 1));
+              SELECT setval('employees_id_seq', COALESCE((SELECT MAX(id) FROM employees), 1));
+              SELECT setval('candidate_skills_id_seq', COALESCE((SELECT MAX(id) FROM candidate_skills), 1));
+              SELECT setval('candidate_experiences_id_seq', COALESCE((SELECT MAX(id) FROM candidate_experiences), 1));
+              SELECT setval('candidate_educations_id_seq', COALESCE((SELECT MAX(id) FROM candidate_educations), 1));
+              SELECT setval('application_history_id_seq', COALESCE((SELECT MAX(id) FROM application_history), 1));
+              SELECT setval('interview_evaluations_id_seq', COALESCE((SELECT MAX(id) FROM interview_evaluations), 1));
+              SELECT setval('notifications_id_seq', COALESCE((SELECT MAX(id) FROM notifications), 1));
+              SELECT setval('audit_logs_id_seq', COALESCE((SELECT MAX(id) FROM audit_logs), 1));

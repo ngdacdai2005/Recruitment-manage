@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom';
-import { Briefcase, UserCheck, ShieldAlert, LogIn, LogOut } from 'lucide-react';
+import { Briefcase, UserCheck, ShieldAlert, LogIn, LogOut, UserPlus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Footer } from './Footer';
 import { appConfig } from '../config/app.config';
@@ -110,11 +110,18 @@ export const PublicLayout: React.FC<{ onApplyClick?: (job: any) => void }> = ({ 
             ) : (
               <div className="flex items-center gap-2">
                 <Link
-                  to="/auth"
+                  to="/auth?mode=register"
+                  className="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 hover:border-slate-400 transition-all flex items-center gap-1.5 shadow-2xs"
+                >
+                  <UserPlus className="w-4 h-4 text-indigo-600" />
+                  <span>Đăng ký</span>
+                </Link>
+                <Link
+                  to="/auth?mode=login"
                   className="px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm shadow-indigo-200 transition-all flex items-center gap-1.5"
                 >
                   <LogIn className="w-4 h-4" />
-                  Đăng nhập
+                  <span>Đăng nhập</span>
                 </Link>
               </div>
             )}
